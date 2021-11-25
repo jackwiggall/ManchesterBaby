@@ -35,7 +35,7 @@ void Simulator::incrementCI() {
 }
 
 void Simulator::fetch() {
-
+        //test push
 }
 
 void Simulator::decodeAndExecute() {
