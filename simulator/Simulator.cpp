@@ -11,6 +11,8 @@ Simulator::Simulator(){
 }
 
 bool Simulator::setup(){
+    //get memorySize
+    //call load
     return false;
 }
 
@@ -20,7 +22,7 @@ bool Simulator::loadProgram(){
 
 void Simulator::run() {
     if (ready==true) {
-        
+        //loop?
         incrementCI();
         fetch();
         decodeAndExecute();
@@ -41,5 +43,7 @@ void Simulator::decodeAndExecute() {
 }
 
 void Simulator::display() {
-
+    //memory 32xnum grid
+    //2 columns
+    //coloured squares?
 }
