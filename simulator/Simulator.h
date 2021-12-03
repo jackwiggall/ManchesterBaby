@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cmath>
+#include "../binary_library/binary.h"
 using namespace std;
 
 class Simulator {
@@ -32,6 +34,12 @@ class Simulator {
          * @brief Whether the simulator is ready to run
          */
         bool ready = false;
+
+
+        /**
+         * @brief Whether the simulator is done running a program
+         */
+        bool done = false;
 
         /**
          * @brief Whether to run the program continuously or step-by-step

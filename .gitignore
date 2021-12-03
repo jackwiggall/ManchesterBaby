@@ -1,2 +1,3 @@
 /.vscode
-simulator/a.out
+simulator/outfile
+simulator/*.o
