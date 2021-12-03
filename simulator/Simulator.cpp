@@ -40,7 +40,7 @@ void Simulator::fetch() {
     //checks if ci is over memory capacity
     if (ci >memsize)
     {
-        throw invalid_argument("the Ci counter exceded memory size");
+        throw invalid_argument("The CI counter exceeds the memory size of the computer.");
     }
     
     
