@@ -45,7 +45,71 @@ void Simulator::fetch() {
 }
 
 void Simulator::decodeAndExecute() {
-    
+    // Get instruction from register
+    string instruction = pi;
+
+    // Retrieve opcode
+    string opcode = instruction.substr(13,3);
+
+    // Do not fetch operand for CMP and STP instructions, as they are not required
+    string address = "";
+    string operand = "";
+    if(opcode != "011" && opcode != "111"){
+        // Calculate operand address length based on memory size
+        int bits = ceil(log(memsize)/log(2));
+        
+        // Get operand address and convert into decimal
+        address = instruction.substr(0,bits-1);
+        int addr = binary::unsignedBinaryToDecimal(address);
+
+        // Fetch operand from store
+        operand = store[addr];
+    }
+
+    // Check opcodes in string representation to avoid unnecessary calculations
+
+    // Jump to a memory location specified by the value at memory location specified by operand
+    if(opcode == "000" /* 0 JMP */){
+        ci = binary::unsignedBinaryToDecimal(operand);
+        return;
+    }
+
+    // Jump Relative by adding the value at memoroy location specified by operand to CI
+    if(opcode == "100" /* 1 JRP */){
+        ci += binary::unsignedBinaryToDecimal(operand);
+        return;
+    }
+
+    // Load negative of value at memoroy location specified by operand into accumulator
+    if(opcode == "010" /* 2 LDN */){
+        acc = binary::getTwosCompliment(operand);
+        return;
+    }
+
+    // Store value in accumulator into memory location specified by operand
+    if(opcode == "110" /* 3 STO */){
+        acc = binary::getTwosCompliment(operand);
+        return;
+    }
+
+    // Subtract value at memoroy location specified by operand from accumulator and store result in accumulator
+    if(opcode == "001" || opcode == "101" /* 4,5 SUB */){
+        acc = binary::binarySubtract(acc, operand);
+    }
+
+    // If value in accumulator is less than zero, increment CI by one
+    if(opcode == "011" /* 6 CMP */){
+        if(binary::signedBinaryToDecimal(acc) < 0){
+            ci++;
+        }
+        return;
+    }
+
+    // Halt the program
+    if(opcode == "111" /* 7 STP */){
+        done = true;
+        return;
+    }
 }
 
 void Simulator::display() {

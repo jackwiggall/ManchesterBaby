@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cmath>
 #include "../binary_library/binary.h"
 using namespace std;
 
