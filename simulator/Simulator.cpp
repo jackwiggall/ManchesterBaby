@@ -1,5 +1,6 @@
 #include "Simulator.h"
 
+
 int main() {
 
     Simulator sim;
@@ -35,7 +36,20 @@ void Simulator::incrementCI() {
 }
 
 void Simulator::fetch() {
-        //test push
+    
+    //checks if ci is over memory capacity
+    if (ci >memsize)
+    {
+        throw invalid_argument("the Ci counter exceded memory size");
+    }
+    
+    
+  
+    //use number to find line in store file
+    pi = store[ci];
+   
+    
+
 }
 
 void Simulator::decodeAndExecute() {
