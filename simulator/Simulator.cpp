@@ -1,6 +1,7 @@
 #include "Simulator.h"
 #include "Colors.h"
 
+
 int main() {
 
     Simulator sim;
@@ -41,6 +42,19 @@ void Simulator::incrementCI() {
 }
 
 void Simulator::fetch() {
+    
+    //checks if ci is over memory capacity
+    if (ci >=memsize)
+    {
+        throw invalid_argument("The CI counter exceeds the memory size of the computer.");
+    }
+    
+    
+  
+    //use number to find line in store file
+    pi = store[ci];
+   
+    
 
 }
 
@@ -117,6 +131,9 @@ void Simulator::display() {
     //2 columns
     //coloured squares?
 
+}
+
+
     //display content shows memory, CI, PI, accum, STOP
     //Display is printed after each cycle
     //text, text-based graphics, colour?
@@ -154,3 +171,4 @@ void Simulator::display() {
     
     //🔲 ⬜ ⬛ emoji idk
 }
+
