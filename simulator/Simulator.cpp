@@ -131,9 +131,6 @@ void Simulator::display() {
     //2 columns
     //coloured squares?
 
-}
-
-
     //display content shows memory, CI, PI, accum, STOP
     //Display is printed after each cycle
     //text, text-based graphics, colour?
