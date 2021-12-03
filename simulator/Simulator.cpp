@@ -24,11 +24,15 @@ bool Simulator::loadProgram(){
 
 void Simulator::run() {
     if (ready==true) {
-        //loop?
-        incrementCI();
-        fetch();
-        decodeAndExecute();
-        display();
+        while(!done){
+            incrementCI();
+            fetch();
+            decodeAndExecute();
+            display();
+        }
+    }
+    else{
+        // Display error message
     }
 }
 
@@ -41,7 +45,7 @@ void Simulator::fetch() {
 }
 
 void Simulator::decodeAndExecute() {
-
+    
 }
 
 void Simulator::display() {

@@ -8,7 +8,7 @@ namespace binary {
         int length = binary.length();
 
         for(int i = 0; i < length; i++){
-            if(binary[length-1-i] == '1'){
+            if(binary[i] == '1'){
                 decimal += pow(2,i);
             }
         }
@@ -17,7 +17,7 @@ namespace binary {
     }
 
     int signedBinaryToDecimal(std::string binary){
-        if(binary[0] == '0'){
+        if(binary.back() == '0'){
             return unsignedBinaryToDecimal(binary);
         }
         else{
@@ -27,11 +27,15 @@ namespace binary {
     }
 
     std::string decimalToUnsignedBinary(int decimal, int size){
-        int array[size] = { 0 };
+        std::vector<int> array(size, 0);
         
-        for(int i = size-1; decimal > 0; i--){
+        for(int i = 0; decimal > 0; i++){
             array[i] = decimal % 2;
             decimal /= 2;
+
+            if(i == size-1){
+                break;
+            }
         }
 
         std::string binary = "";
@@ -56,18 +60,18 @@ namespace binary {
 
     std::string binaryAdd(std::string a, std::string b){
         if(a.length() < b.length()){
-            a.insert(a.begin(), b.length()-a.length(), '0');
+            a.insert(a.end(), b.length()-a.length(), '0');
         }
         if(b.length() < a.length()){
-            b.insert(b.begin(), a.length()-b.length(), '0');
+            b.insert(b.end(), a.length()-b.length(), '0');
         }
 
         int size = a.length(); 
 
-        int array[size] = { 0 };
+        std::vector<int> array(size, 0);
         int carry = 0;
 
-        for(int i = size-1; i >= 0; i--){
+        for(int i = 0; i < size; i++){
             int x, y;
             if(a[i] == '1'){
                 x = 1;
@@ -100,7 +104,7 @@ namespace binary {
     }
 
     std::string getTwosCompliment(std::string binary){
-        for(int i = 0; i < binary.length(); i++){
+        for(int i = 0; i < (int) binary.length(); i++){
             if(binary[i] == '0'){
                 binary[i] = '1';
             }
@@ -112,4 +116,17 @@ namespace binary {
         return binary;
     }
 
+}
+
+int main(){
+    std::cout << binary::decimalToUnsignedBinary(47,8) << std::endl;
+    std::cout << binary::decimalToSignedBinary(47,8) << std::endl;
+    std::cout << binary::decimalToSignedBinary(-47,8) << std::endl;
+
+    std::cout << binary::unsignedBinaryToDecimal("11110100") << std::endl;
+    std::cout << binary::signedBinaryToDecimal("11110100") << std::endl;
+    std::cout << binary::signedBinaryToDecimal("10001011") << std::endl;
+
+    std::cout << binary::binaryAdd("11110100","11110100") << std::endl;
+    std::cout << binary::binarySubtract("11110100","11110100") << std::endl;
 }

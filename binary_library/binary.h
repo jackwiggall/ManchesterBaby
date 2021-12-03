@@ -1,5 +1,9 @@
+#ifndef BINARY_H
+#define BINARY_H
+
 #include <string>
 #include <cmath>
+#include <vector>
 
 namespace binary {
 
@@ -15,3 +19,5 @@ namespace binary {
     std::string binarySubtract(std::string a, std::string b);
 
 }
+
+#endif
