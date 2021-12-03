@@ -38,7 +38,7 @@ void Simulator::incrementCI() {
 void Simulator::fetch() {
     
     //checks if ci is over memory capacity
-    if (ci >memsize)
+    if (ci >=memsize)
     {
         throw invalid_argument("the Ci counter exceded memory size");
     }
