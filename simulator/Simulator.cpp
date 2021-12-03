@@ -1,8 +1,12 @@
 #include "Simulator.h"
+#include <fstream>
 
 int main() {
 
     Simulator sim;
+    if(sim.loadProgram()){
+        cout << "true";
+    }
     return 0;
 }
 
@@ -17,7 +21,26 @@ bool Simulator::setup(){
 }
 
 bool Simulator::loadProgram(){
-    return false;
+    string line;
+    //load in file
+    ifstream reader("../BabyCode/BabyTest1-MC.txt");
+    if (!reader) {
+        return false;
+    }
+    //count lines
+    int i = 0;
+    while(getline(reader, line)) {
+        if (line.length() >= 32) { //if line not 32 bits long then reject
+            return false;
+        }
+        store.push_back(line); //add to store
+        i++;
+    }
+    //check memory is big enough
+    if (i > memsize) {
+        return false;
+    }
+    return true;
 }
 
 void Simulator::run() {
