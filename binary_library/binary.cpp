@@ -117,16 +117,3 @@ namespace binary {
     }
 
 }
-
-int main(){
-    std::cout << binary::decimalToUnsignedBinary(47,8) << std::endl;
-    std::cout << binary::decimalToSignedBinary(47,8) << std::endl;
-    std::cout << binary::decimalToSignedBinary(-47,8) << std::endl;
-
-    std::cout << binary::unsignedBinaryToDecimal("11110100") << std::endl;
-    std::cout << binary::signedBinaryToDecimal("11110100") << std::endl;
-    std::cout << binary::signedBinaryToDecimal("10001011") << std::endl;
-
-    std::cout << binary::binaryAdd("11110100","11110100") << std::endl;
-    std::cout << binary::binarySubtract("11110100","11110100") << std::endl;
-}
