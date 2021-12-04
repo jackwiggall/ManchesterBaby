@@ -10,7 +10,13 @@ int main() {
 }
 
 Simulator::Simulator(){
-    //
+    // Initialise registers
+    ci = 0;
+    pi = "00000000000000000000000000000000";
+    acc = "00000000000000000000000000000000";
+
+    // Initialise memory
+    store.assign(memsize, "00000000000000000000000000000000");
 }
 
 bool Simulator::setup(){
