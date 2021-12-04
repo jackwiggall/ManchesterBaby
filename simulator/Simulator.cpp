@@ -54,13 +54,14 @@ void Simulator::decodeAndExecute() {
     // Do not fetch operand for CMP and STP instructions, as they are not required
     string address = "";
     string operand = "";
+    int addr;
     if(opcode != "011" && opcode != "111"){
         // Calculate operand address length based on memory size
         int bits = ceil(log(memsize)/log(2));
         
         // Get operand address and convert into decimal
         address = instruction.substr(0,bits-1);
-        int addr = binary::unsignedBinaryToDecimal(address);
+        addr = binary::unsignedBinaryToDecimal(address);
 
         // Fetch operand from store
         operand = store[addr];
@@ -88,8 +89,7 @@ void Simulator::decodeAndExecute() {
 
     // Store value in accumulator into memory location specified by operand
     if(opcode == "110" /* 3 STO */){
-        acc = binary::getTwosCompliment(operand);
-        return;
+        store[addr] = acc;
     }
 
     // Subtract value at memoroy location specified by operand from accumulator and store result in accumulator
