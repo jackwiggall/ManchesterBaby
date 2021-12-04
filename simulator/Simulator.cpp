@@ -127,45 +127,45 @@ void Simulator::decodeAndExecute() {
 }
 
 void Simulator::display() {
-    //memory 32xnum grid
-    //2 columns
-    //coloured squares?
+    // Display stop lamp
+        // Black or green/blue square depending on whether done is true or false
 
-    //display content shows memory, CI, PI, accum, STOP
-    //Display is printed after each cycle
-    //text, text-based graphics, colour?
+    // Display values of registers in binary form (coloured squares) and in decimal (use binary::(un)signedBinaryToDecimal())
+        // display CI (unsigned binary)
+        // display PI (unsigned binary)
+        // display accumulator (signed binary)
 
-    //each step in the fetch-dec-exe cycle the state of each part
-    //of the BABY hardware, i.e displaying register values, memory values and I/O
-    
-    /**
-     * int num = 3;
-     * string output;
-     * output += to_string(num);
-     * cout << output << endl;**/
-
-    int value = 0; //default value to be changed later once data is given
-
-    //outputs 0 if the strings pi and acc are empty
-    string piVal = pi;
-    if (pi=="") {
-        piVal = "0";
-    }
-    string accVal = acc;
-    if (acc=="") {
-        accVal = "0";
-    }
+    // Display memory
+        // Loop through every line of vector (use vector iterator)
+        // Display each line as binary (colour squared) and as a signed binary (binary::signedBinaryToDecimal(string))
 
 
-    cout << "\n" << BOLD(FGRN("Memory")) << "\t\t" << value << endl; //store?
-    cout << BOLD(FGRN("MemoryVal")) << "\t" << &store << endl; //pointer of store
-    cout << BOLD(FGRN("RegisterVal")) << "\t" << &value << endl; //pointer of register
-    cout << BOLD(FGRN("CI")) << "\t\t" << ci << endl;
-    cout << BOLD(FGRN("PI")) << "\t\t" << piVal << endl;
-    cout << BOLD(FGRN("Accumulator")) << "\t" << accVal << endl; //idk
-    cout << BOLD(FGRN("I/O")) << "\t\t" << value << endl;
-    cout << BOLD(FGRN("STOP")) << endl;
-    
-    //🔲 ⬜ ⬛ emoji idk
+
+
+
+
+    // Old code
+
+    // int value = 0; //default value to be changed later once data is given
+
+    // //outputs 0 if the strings pi and acc are empty
+    // string piVal = pi;
+    // if (pi=="") {
+    //     piVal = "0";
+    // }
+    // string accVal = acc;
+    // if (acc=="") {
+    //     accVal = "0";
+    // }
+
+
+    // cout << "\n" << BOLD(FGRN("Memory")) << "\t\t" << value << endl; //store?
+    // cout << BOLD(FGRN("MemoryVal")) << "\t" << &store << endl; //pointer of store
+    // cout << BOLD(FGRN("RegisterVal")) << "\t" << &value << endl; //pointer of register
+    // cout << BOLD(FGRN("CI")) << "\t\t" << ci << endl;
+    // cout << BOLD(FGRN("PI")) << "\t\t" << piVal << endl;
+    // cout << BOLD(FGRN("Accumulator")) << "\t" << accVal << endl; //idk
+    // cout << BOLD(FGRN("I/O")) << "\t\t" << value << endl;
+    // cout << BOLD(FGRN("STOP")) << endl;
 }
 
