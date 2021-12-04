@@ -90,6 +90,7 @@ void Simulator::decodeAndExecute() {
     // Store value in accumulator into memory location specified by operand
     if(opcode == "110" /* 3 STO */){
         store[addr] = acc;
+        return;
     }
 
     // Subtract value at memoroy location specified by operand from accumulator and store result in accumulator
