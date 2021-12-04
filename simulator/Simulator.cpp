@@ -38,7 +38,7 @@ void Simulator::run() {
 }
 
 void Simulator::incrementCI() {
-    
+    ci++;
 }
 
 void Simulator::fetch() {
