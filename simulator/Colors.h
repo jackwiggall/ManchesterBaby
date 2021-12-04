@@ -2,6 +2,8 @@
 #define _COLORS_
 #include <stdlib.h>
 
+#define SQR  "\u25A0"
+
 /* FOREGROUND */
 #define RST  "\x1B[0m"
 #define KRED  "\x1B[31m"

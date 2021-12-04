@@ -127,22 +127,72 @@ void Simulator::decodeAndExecute() {
     }
 }
 
-void Simulator::display() {
+//might need to add spaces between squares?
+void Simulator::display() { 
     // Display stop lamp
         // Black or green/blue square depending on whether done is true or false
+    if(done) {
+        cout << BOLD(FCYN("Done?")) << "\t\t"<< FCYN(SQR) << endl; 
+    }else {
+        cout << BOLD(FCYN("Done?")) << "\t\t"<< FRED(SQR) << endl;
+    }
+    
 
     // Display values of registers in binary form (coloured squares) and in decimal (use binary::(un)signedBinaryToDecimal())
         // display CI (unsigned binary)
+    int sqrLen = 5; //not sure what number
+    string tempCi = binary::decimalToUnsignedBinary(ci,sqrLen);
+    string ciVal;
+    for (int i=0;i<sqrLen;i++) {
+        if (tempCi.at(i)=='1') {
+            ciVal += FCYN(SQR);
+        }else {
+            ciVal += SQR;
+        }
+    }cout << BOLD(FCYN("CI")) << "\t\t" << ciVal << "\t" << ci << endl;
+
         // display PI (unsigned binary)
+    int piVal = binary::unsignedBinaryToDecimal(pi);
+    string tempPi;
+    if (pi.length()>0) {
+        int piLen = pi.length(); //prevents compile warning
+        for (int i=0;i<piLen;i++) {
+            if (pi.at(i)=='1') {
+                tempPi += FCYN(SQR);
+            }else {
+                tempPi += SQR;
+            }
+        }
+    }else {
+        for (int i=0;i<sqrLen;i++) {
+            tempPi += SQR;
+        }
+    }
+    cout << BOLD(FCYN("PI")) << "\t\t" << tempPi << "\t" << piVal << endl;
+
+
         // display accumulator (signed binary)
+    int accVal = binary::signedBinaryToDecimal(acc);
+    string tempAcc;
+    if (acc.length()>0) {
+        int accLen = acc.length(); //prevents compile warning
+        for (int i=0;i<accLen;i++) {
+            if (acc.at(i)=='1') {
+                tempAcc += FCYN(SQR);
+            }else {
+                tempAcc += SQR;
+            }
+        }
+    }else {
+        for (int i=0;i<sqrLen;i++) {
+            tempAcc += SQR;
+        }
+    }
+    cout << BOLD(FCYN("Accumulator")) << "\t" << tempAcc << "\t" << accVal << endl; //idk
 
     // Display memory
         // Loop through every line of vector (use vector iterator)
         // Display each line as binary (colour squared) and as a signed binary in decimal (binary::signedBinaryToDecimal(string))
-
-
-
-
 
 
     // Old code
@@ -160,13 +210,10 @@ void Simulator::display() {
     // }
 
 
-    // cout << "\n" << BOLD(FGRN("Memory")) << "\t\t" << value << endl; //store?
-    // cout << BOLD(FGRN("MemoryVal")) << "\t" << &store << endl; //pointer of store
-    // cout << BOLD(FGRN("RegisterVal")) << "\t" << &value << endl; //pointer of register
-    // cout << BOLD(FGRN("CI")) << "\t\t" << ci << endl;
-    // cout << BOLD(FGRN("PI")) << "\t\t" << piVal << endl;
-    // cout << BOLD(FGRN("Accumulator")) << "\t" << accVal << endl; //idk
-    // cout << BOLD(FGRN("I/O")) << "\t\t" << value << endl;
-    // cout << BOLD(FGRN("STOP")) << endl;
+    // cout << "\n" << BOLD(FCYN("Memory")) << "\t\t" << value << endl; //store?
+    // cout << BOLD(FCYN("MemoryVal")) << "\t" << &store << endl; //pointer of store
+    // cout << BOLD(FCYN("RegisterVal")) << "\t" << &value << endl; //pointer of register
+    // cout << BOLD(FCYN("I/O")) << "\t\t" << value << endl;
+    // cout << BOLD(FCYN("STOP")) << endl;
 }
 
