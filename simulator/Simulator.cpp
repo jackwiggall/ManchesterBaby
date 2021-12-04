@@ -138,7 +138,7 @@ void Simulator::display() {
 
     // Display memory
         // Loop through every line of vector (use vector iterator)
-        // Display each line as binary (colour squared) and as a signed binary (binary::signedBinaryToDecimal(string))
+        // Display each line as binary (colour squared) and as a signed binary in decimal (binary::signedBinaryToDecimal(string))
 
 
 
