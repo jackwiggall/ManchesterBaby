@@ -30,7 +30,7 @@ bool Simulator::setup(){
     } else if (infoChoice == "n") {
         info = false;
     } else {
-        cout << "invalid input, set to true as default" << endl;
+        cout << "Input not recognised or empty, explanations shown by default." << endl;
     }
 
     cin.ignore(1000, '\n'); //if invalid input clear buffer 
@@ -45,7 +45,7 @@ bool Simulator::setup(){
     } else if (stepChoice == "c") {
         step = false;
     } else {
-        cout << "invalid input, set to step by step as default" << endl;
+        cout << "Input not recognised or empty, program runs step-by-steo by default" << endl;
     }
 
     cin.ignore(1000, '\n'); //if invalid input clear buffer 
@@ -57,7 +57,7 @@ bool Simulator::setup(){
     //validation for the memory size 
     if ((memoryChoice >= 32) && (memoryChoice <= 4096)) {
         memsize = memoryChoice;
-        memory.assign(memsize,"0");
+        memory.assign(memsize,"00000000000000000000000000000000");
     } else {
         cout << "invalid input, set to 32 as default" << endl;
     }
