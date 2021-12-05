@@ -130,7 +130,7 @@ void Simulator::decodeAndExecute() {
 //might need to add spaces between squares?
 void Simulator::display() { 
     // Display stop lamp
-        // Black or green/blue square depending on whether done is true or false
+        // cyan or white square depending on whether done is true or false
 
     int sqrLen = 32; //bit number
 
@@ -208,7 +208,7 @@ void Simulator::display() {
  
     int size = static_cast<int>(store.size()); //prevents comparison type error
     if (!store.empty()) {
-        cout << "\n" << endl;
+        cout << BOLD(FCYN("\nVector")) << endl;
         for (int i=0;i<size;i++) {
             int mem = binary::signedBinaryToDecimal(store.at(i));
             string memSqr;
@@ -226,7 +226,9 @@ void Simulator::display() {
                         memSqr += SQR;
                     }
                 }
-            cout << BOLD(FCYN("Vector")) << "\t\t" << memSqr << "\t" << mem << endl;
+            string valid = FCYN("V");
+            valid += to_string(i);
+            cout << valid << "\t\t" << memSqr << "\t" << mem << endl;
         }
     }
 
