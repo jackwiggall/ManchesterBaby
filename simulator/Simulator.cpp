@@ -131,69 +131,105 @@ void Simulator::decodeAndExecute() {
 void Simulator::display() { 
     // Display stop lamp
         // Black or green/blue square depending on whether done is true or false
+
+    int sqrLen = 32; //bit number
+
+    string doneSqr;
+    for (int i=0;i<sqrLen;i++) {
+        if (done) {
+            doneSqr += FCYN(SQR);
+        }else {
+            doneSqr += SQR;
+        }
+    }
+
     if(done) {
-        cout << BOLD(FCYN("Done?")) << "\t\t"<< FCYN(SQR) << endl; 
+        cout << BOLD(FCYN("STOP")) << "\t\t"<< doneSqr << endl; 
     }else {
-        cout << BOLD(FCYN("Done?")) << "\t\t"<< FRED(SQR) << endl;
+        cout << BOLD(FCYN("STOP")) << "\t\t"<< doneSqr << endl;
     }
     
 
     // Display values of registers in binary form (coloured squares) and in decimal (use binary::(un)signedBinaryToDecimal())
         // display CI (unsigned binary)
-    int sqrLen = 5; //not sure what number
+    
     string tempCi = binary::decimalToUnsignedBinary(ci,sqrLen);
-    string ciVal;
+    string ciSqr; //squares of ci
     for (int i=0;i<sqrLen;i++) {
         if (tempCi.at(i)=='1') {
-            ciVal += FCYN(SQR);
+            ciSqr += FCYN(SQR);
         }else {
-            ciVal += SQR;
+            ciSqr += SQR;
         }
-    }cout << BOLD(FCYN("CI")) << "\t\t" << ciVal << "\t" << ci << endl;
+    }cout << BOLD(FCYN("CI")) << "\t\t" << ciSqr << "\t" << ci << endl;
 
         // display PI (unsigned binary)
     int piVal = binary::unsignedBinaryToDecimal(pi);
-    string tempPi;
-    if (pi.length()>0) {
+    string piSqr; //squares of pi
+    if (pi.length()>1) {
         int piLen = pi.length(); //prevents compile warning
         for (int i=0;i<piLen;i++) {
             if (pi.at(i)=='1') {
-                tempPi += FCYN(SQR);
+                piSqr += FCYN(SQR);
             }else {
-                tempPi += SQR;
+                piSqr += SQR;
             }
         }
     }else {
         for (int i=0;i<sqrLen;i++) {
-            tempPi += SQR;
+            piSqr += SQR;
         }
     }
-    cout << BOLD(FCYN("PI")) << "\t\t" << tempPi << "\t" << piVal << endl;
+    cout << BOLD(FCYN("PI")) << "\t\t" << piSqr << "\t" << piVal << endl;
 
 
         // display accumulator (signed binary)
     int accVal = binary::signedBinaryToDecimal(acc);
-    string tempAcc;
-    if (acc.length()>0) {
+    string accSqr; //squares of acc
+    if (acc.length()>1) {
         int accLen = acc.length(); //prevents compile warning
         for (int i=0;i<accLen;i++) {
             if (acc.at(i)=='1') {
-                tempAcc += FCYN(SQR);
+                accSqr += FCYN(SQR);
             }else {
-                tempAcc += SQR;
+                accSqr += SQR;
             }
         }
     }else {
         for (int i=0;i<sqrLen;i++) {
-            tempAcc += SQR;
+            accSqr += SQR;
         }
     }
-    cout << BOLD(FCYN("Accumulator")) << "\t" << tempAcc << "\t" << accVal << endl; //idk
+    cout << BOLD(FCYN("Accumulator")) << "\t" << accSqr << "\t" << accVal << endl;
 
     // Display memory
         // Loop through every line of vector (use vector iterator)
         // Display each line as binary (colour squared) and as a signed binary in decimal (binary::signedBinaryToDecimal(string))
+    
+    int n=ci; //number of iteration, needed number to increment outside of function
+    int size = static_cast<int>(store.size()); //prevents comparison type error
+    if (!store.empty()) {
+        if (n>-1 && n<=size) {
 
+            int mem = binary::signedBinaryToDecimal(store.at(n));
+            string memSqr;
+            int memLen = store.at(n).length(); //prevents compile warning
+            if (memLen>1) {
+                for (int i=0;i<memLen;i++) {
+                    if (store.at(n).at(i)=='1') {
+                        memSqr += FCYN(SQR);
+                    }else {
+                        memSqr += SQR;
+                    }
+                }
+            }else {
+                for (int i=0;i<memLen;i++) {
+                    memSqr += SQR;
+                }
+            }
+            cout << BOLD(FCYN("Vector")) << "\t\t" << memSqr << "\t" << mem << endl;
+        }
+    }
 
     // Old code
 
