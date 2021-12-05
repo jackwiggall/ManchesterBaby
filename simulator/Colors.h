@@ -2,8 +2,11 @@
 #define _COLORS_
 #include <stdlib.h>
 
+#define SQR  "\u25A0"
+
 /* FOREGROUND */
 #define RST  "\x1B[0m"
+#define KBLK  "\x1B[30m"
 #define KRED  "\x1B[31m"
 #define KGRN  "\x1B[32m"
 #define KYEL  "\x1B[33m"
@@ -12,6 +15,7 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
+#define FBLK(x) KBLK x RST
 #define FRED(x) KRED x RST
 #define FGRN(x) KGRN x RST
 #define FYEL(x) KYEL x RST

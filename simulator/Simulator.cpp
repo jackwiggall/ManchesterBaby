@@ -184,23 +184,106 @@ void Simulator::decodeAndExecute() {
     }
 }
 
-void Simulator::display() {
+//might need to add spaces between squares?
+void Simulator::display() { 
     // Display stop lamp
-        // Black or green/blue square depending on whether done is true or false
+        // cyan or white square depending on whether done is true or false
+
+    int sqrLen = 32; //bit number
+
+    if(done) {
+        cout << BOLD(FCYN("STOP")) << "\t\t"<< FCYN(SQR) << endl; 
+    }else {
+        cout << BOLD(FCYN("STOP")) << "\t\t"<< FBLK(SQR) << endl;
+    }
+    
 
     // Display values of registers in binary form (coloured squares) and in decimal (use binary::(un)signedBinaryToDecimal())
         // display CI (unsigned binary)
+    
+    string tempCi = binary::decimalToUnsignedBinary(ci,sqrLen);
+    string ciSqr; //squares of ci
+    for (int i=0;i<sqrLen;i++) {
+        if (tempCi.at(i)=='1') {
+            ciSqr += FCYN(SQR);
+        }else {
+            ciSqr += FBLK(SQR);
+        } ciSqr += " ";
+    }cout << BOLD(FCYN("CI")) << "\t\t" << ciSqr << "\t" << ci << endl;
+
         // display PI (unsigned binary)
+    int piVal = binary::unsignedBinaryToDecimal(pi);
+    string piSqr; //squares of pi
+    if (pi.length()>1) { //string validation
+        int piLen = pi.length(); //prevents compile warning
+        for (int i=0;i<piLen;i++) {
+            if (pi.at(i)=='1') {
+                piSqr += FCYN(SQR);
+            }else {
+                piSqr += FBLK(SQR);
+            }
+            piSqr += " ";
+        }
+    }else {
+        for (int i=0;i<sqrLen;i++) {
+            piSqr += FBLK(SQR);
+            piSqr += " ";
+        }
+    }
+    cout << BOLD(FCYN("PI")) << "\t\t" << piSqr << "\t" << piVal << endl;
+
+
         // display accumulator (signed binary)
+    int accVal = binary::signedBinaryToDecimal(acc);
+    string accSqr; //squares of acc
+    if (acc.length()>1) { //string validation
+        int accLen = acc.length(); //prevents compile warning
+        for (int i=0;i<accLen;i++) {
+            if (acc.at(i)=='1') {
+                accSqr += FCYN(SQR);
+            }else {
+                accSqr += FBLK(SQR);
+            }accSqr += " ";
+        }
+    }else {
+        for (int i=0;i<sqrLen;i++) {
+            accSqr += FBLK(SQR);
+            accSqr += " ";
+        }
+    }
+    cout << BOLD(FCYN("Accumulator")) << "\t" << accSqr << "\t" << accVal << endl;
 
     // Display memory
         // Loop through every line of vector (use vector iterator)
         // Display each line as binary (colour squared) and as a signed binary in decimal (binary::signedBinaryToDecimal(string))
-
-
-
-
-
+ 
+    int size = static_cast<int>(store.size()); //prevents comparison type error
+    if (!store.empty()) {
+        cout << BOLD(FCYN("\nStore")) << endl;
+        for (int i=0;i<size;i++) {
+            int mem = binary::signedBinaryToDecimal(store.at(i));
+            string memSqr;
+            int memLen = store.at(i).length(); //prevents compile warning
+            if (memLen>1) { //string validation
+                    for (int j=0;j<memLen;j++) {
+                        if (store.at(i).at(j)=='1') {
+                            memSqr += FCYN(SQR);
+                        }else {
+                            memSqr += FBLK(SQR);
+                        }
+                        memSqr += " ";
+                    }
+                }else {
+                    for (int j=0;j<memLen;j++) {
+                        memSqr += FBLK(SQR);
+                        memSqr += " ";
+                    }
+                }
+            string valid = FCYN("Line ");
+            valid += to_string(i);
+            cout << valid << "\t\t" << memSqr << "\t" << mem << endl;
+        }
+    }
 
     // Old code
 
@@ -217,13 +300,10 @@ void Simulator::display() {
     // }
 
 
-    // cout << "\n" << BOLD(FGRN("Memory")) << "\t\t" << value << endl; //store?
-    // cout << BOLD(FGRN("MemoryVal")) << "\t" << &store << endl; //pointer of store
-    // cout << BOLD(FGRN("RegisterVal")) << "\t" << &value << endl; //pointer of register
-    // cout << BOLD(FGRN("CI")) << "\t\t" << ci << endl;
-    // cout << BOLD(FGRN("PI")) << "\t\t" << piVal << endl;
-    // cout << BOLD(FGRN("Accumulator")) << "\t" << accVal << endl; //idk
-    // cout << BOLD(FGRN("I/O")) << "\t\t" << value << endl;
-    // cout << BOLD(FGRN("STOP")) << endl;
+    // cout << "\n" << BOLD(FCYN("Memory")) << "\t\t" << value << endl; //store?
+    // cout << BOLD(FCYN("MemoryVal")) << "\t" << &store << endl; //pointer of store
+    // cout << BOLD(FCYN("RegisterVal")) << "\t" << &value << endl; //pointer of register
+    // cout << BOLD(FCYN("I/O")) << "\t\t" << value << endl;
+    // cout << BOLD(FCYN("STOP")) << endl;
 }
 
