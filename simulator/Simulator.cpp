@@ -166,7 +166,7 @@ void Simulator::display() {
         // display PI (unsigned binary)
     int piVal = binary::unsignedBinaryToDecimal(pi);
     string piSqr; //squares of pi
-    if (pi.length()>1) {
+    if (pi.length()>1) { //string validation
         int piLen = pi.length(); //prevents compile warning
         for (int i=0;i<piLen;i++) {
             if (pi.at(i)=='1') {
@@ -186,7 +186,7 @@ void Simulator::display() {
         // display accumulator (signed binary)
     int accVal = binary::signedBinaryToDecimal(acc);
     string accSqr; //squares of acc
-    if (acc.length()>1) {
+    if (acc.length()>1) { //string validation
         int accLen = acc.length(); //prevents compile warning
         for (int i=0;i<accLen;i++) {
             if (acc.at(i)=='1') {
@@ -205,28 +205,27 @@ void Simulator::display() {
     // Display memory
         // Loop through every line of vector (use vector iterator)
         // Display each line as binary (colour squared) and as a signed binary in decimal (binary::signedBinaryToDecimal(string))
-    
-    int n=ci; //number of iteration, needed number to increment outside of function
+ 
     int size = static_cast<int>(store.size()); //prevents comparison type error
     if (!store.empty()) {
-        if (n>-1 && n<=size) {
-
-            int mem = binary::signedBinaryToDecimal(store.at(n));
+        cout << "\n" << endl;
+        for (int i=0;i<size;i++) {
+            int mem = binary::signedBinaryToDecimal(store.at(i));
             string memSqr;
-            int memLen = store.at(n).length(); //prevents compile warning
-            if (memLen>1) {
-                for (int i=0;i<memLen;i++) {
-                    if (store.at(n).at(i)=='1') {
-                        memSqr += FCYN(SQR);
-                    }else {
+            int memLen = store.at(i).length(); //prevents compile warning
+            if (memLen>1) { //string validation
+                    for (int j=0;j<memLen;j++) {
+                        if (store.at(i).at(j)=='1') {
+                            memSqr += FCYN(SQR);
+                        }else {
+                            memSqr += SQR;
+                        }
+                    }
+                }else {
+                    for (int j=0;j<memLen;j++) {
                         memSqr += SQR;
                     }
                 }
-            }else {
-                for (int i=0;i<memLen;i++) {
-                    memSqr += SQR;
-                }
-            }
             cout << BOLD(FCYN("Vector")) << "\t\t" << memSqr << "\t" << mem << endl;
         }
     }
