@@ -140,19 +140,10 @@ void Simulator::display() {
 
     int sqrLen = 32; //bit number
 
-    string doneSqr;
-    for (int i=0;i<sqrLen;i++) {
-        if (done) {
-            doneSqr += FCYN(SQR);
-        }else {
-            doneSqr += SQR;
-        }
-    }
-
     if(done) {
-        cout << BOLD(FCYN("STOP")) << "\t\t"<< doneSqr << endl; 
+        cout << BOLD(FCYN("STOP")) << "\t\t"<< FCYN(SQR) << endl; 
     }else {
-        cout << BOLD(FCYN("STOP")) << "\t\t"<< doneSqr << endl;
+        cout << BOLD(FCYN("STOP")) << "\t\t"<< FBLK(SQR) << endl;
     }
     
 
@@ -165,8 +156,8 @@ void Simulator::display() {
         if (tempCi.at(i)=='1') {
             ciSqr += FCYN(SQR);
         }else {
-            ciSqr += SQR;
-        }
+            ciSqr += FBLK(SQR);
+        } ciSqr += " ";
     }cout << BOLD(FCYN("CI")) << "\t\t" << ciSqr << "\t" << ci << endl;
 
         // display PI (unsigned binary)
@@ -178,12 +169,14 @@ void Simulator::display() {
             if (pi.at(i)=='1') {
                 piSqr += FCYN(SQR);
             }else {
-                piSqr += SQR;
+                piSqr += FBLK(SQR);
             }
+            piSqr += " ";
         }
     }else {
         for (int i=0;i<sqrLen;i++) {
-            piSqr += SQR;
+            piSqr += FBLK(SQR);
+            piSqr += " ";
         }
     }
     cout << BOLD(FCYN("PI")) << "\t\t" << piSqr << "\t" << piVal << endl;
@@ -198,12 +191,13 @@ void Simulator::display() {
             if (acc.at(i)=='1') {
                 accSqr += FCYN(SQR);
             }else {
-                accSqr += SQR;
-            }
+                accSqr += FBLK(SQR);
+            }accSqr += " ";
         }
     }else {
         for (int i=0;i<sqrLen;i++) {
-            accSqr += SQR;
+            accSqr += FBLK(SQR);
+            accSqr += " ";
         }
     }
     cout << BOLD(FCYN("Accumulator")) << "\t" << accSqr << "\t" << accVal << endl;
@@ -214,7 +208,7 @@ void Simulator::display() {
  
     int size = static_cast<int>(store.size()); //prevents comparison type error
     if (!store.empty()) {
-        cout << BOLD(FCYN("\nVector")) << endl;
+        cout << BOLD(FCYN("\nStore")) << endl;
         for (int i=0;i<size;i++) {
             int mem = binary::signedBinaryToDecimal(store.at(i));
             string memSqr;
@@ -224,15 +218,17 @@ void Simulator::display() {
                         if (store.at(i).at(j)=='1') {
                             memSqr += FCYN(SQR);
                         }else {
-                            memSqr += SQR;
+                            memSqr += FBLK(SQR);
                         }
+                        memSqr += " ";
                     }
                 }else {
                     for (int j=0;j<memLen;j++) {
-                        memSqr += SQR;
+                        memSqr += FBLK(SQR);
+                        memSqr += " ";
                     }
                 }
-            string valid = FCYN("V");
+            string valid = FCYN("Line ");
             valid += to_string(i);
             cout << valid << "\t\t" << memSqr << "\t" << mem << endl;
         }
