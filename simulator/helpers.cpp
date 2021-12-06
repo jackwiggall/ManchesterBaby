@@ -7,7 +7,7 @@ namespace helpers {
     }
 
     void waitForInput(){
-        cout << "Press Enter to continue...";
+        cout << "\nPress Enter to continue...";
         cin.get();
     }
 }

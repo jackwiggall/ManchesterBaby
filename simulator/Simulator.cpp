@@ -1,9 +1,11 @@
+// Necessary includes
 #include "Simulator.h"
 #include "Colors.h"
 #include "helpers.h"
-#include <fstream>
-#include <algorithm>
 
+/**
+ * @brief Construct a new Simulator object
+ */
 Simulator::Simulator(){
     // Initialise registers
     ci = 0;
@@ -15,21 +17,29 @@ Simulator::Simulator(){
 }
 
 /**
- *  Function sets up the simulator by setting the starting values (memory size, info and step) and calls the load function.
+ * @brief Sets up the Simulator object
  */
-bool Simulator::setup(){
+void Simulator::setup(){
+    // Clear the screen before setup
     helpers::clearScreen();
-    string infoChoice;
-    int memoryChoice;
-    string stepChoice;
-    string filename;
-    std::vector<string> memory;
 
-    //get user input for if info should be displayed
-    cout << "\nWould you like to display fetch execute explanation while running? [y/n]" << endl;
+    // Declare local helpers
+    string infoChoice;
+    string stepChoice;
+    string memoryChoice;
+    string filename;
+
+    cout << FCYN("\n█▀ █▀▀ ▀█▀ █ █ █▀█") << endl;
+    cout <<   FCYN("▄█ ██▄  █  █▄█ █▀▀\n") << endl;
+
+    // Prompt user about fetch-execute explanations
+    cout << FCYN("\n[SETUP] ") << "Would you like to display fetch execute explanation while running? [y/n]" << endl;
     cin >> infoChoice;
 
-    //info validation
+    // Clear the input buffer to remove any pending tokens
+    cin.ignore(1000, '\n');
+
+    // Validate input and toggle info mode
     if (infoChoice == "y") {
         info = true;
     } else if (infoChoice == "n") {
@@ -38,13 +48,14 @@ bool Simulator::setup(){
         cout << "Input not recognised or empty, explanations shown by default." << endl;
     }
 
-    cin.ignore(1000, '\n'); //if invalid input clear buffer 
-
-    //get user input for if program should run step by step
-    cout << "\nWould you like to run the program step by step or continuously? [s/c]" << endl;
+    // Prompt user about step-by-step or continous mode
+    cout << FCYN("\n[SETUP] ") << "Would you like to run the program step by step or continuously? [s/c]" << endl;
     cin >> stepChoice;
 
-    //step validation
+    // Clear the input buffer to remove any pending tokens
+    cin.ignore(1000, '\n');
+
+    // Validate input and toggle step mode
     if (stepChoice == "s") {
         step = true;
     } else if (stepChoice == "c") {
@@ -53,62 +64,87 @@ bool Simulator::setup(){
         cout << "Input not recognised or empty, program runs step-by-steo by default" << endl;
     }
 
-    cin.ignore(1000, '\n'); //if invalid input clear buffer 
-
-    //get memory size user input
-    cout << "\nWhat would you like the memory size to be, standard is 32 (must be between 32 and 4096)?" << endl;
+    // Prompt user for memory size
+    cout << FCYN("\n[SETUP] ") << "What would you like the memory size to be, standard is 32 (must be between 32 and 4096)?" << endl;
     cin >> memoryChoice;
 
-    //validation for the memory size 
-    if ((memoryChoice >= 32) && (memoryChoice <= 4096)) {
-        memsize = memoryChoice;
-        memory.assign(memsize,"00000000000000000000000000000000");
-    } else {
-        cout << "invalid input, set to 32 as default" << endl;
+    // Clear the input buffer to remove any pending tokens
+    cin.ignore(1000, '\n');
+
+    int memory = 32;
+    try{
+        memory = stoi(memoryChoice);
+    }
+    catch(const invalid_argument &e){
+        memory = -1;
     }
 
-    cin.ignore(1000, '\n'); //if invalid input clear buffer 
+    // Validate input and initialise memory store
+    if ((memory >= 32) && (memory <= 4096)) {
+        memsize = memory;
+        store.assign(memsize,"00000000000000000000000000000000");
+    } else {
+        cout << "Input is not valid, memory size set to default of 32 lines" << endl;
+    }
 
-    //get user input for filename
-    cout << "\nPlease enter the path of the machine code file:" << endl;
+    // Prompt user for filename
+    cout << FCYN("\n[SETUP] ") << "Please enter the path of the machine code file:" << endl;
     cin >> filename;
 
-    cin.ignore(1000, '\n'); //if invalid input clear buffer 
+    // Clear the input buffer to remove any pending tokens
+    cin.ignore(1000, '\n'); 
 
-    //call load and check if successful
+    // Load the program and set ready 
     if (loadProgram(filename) == true){
         ready = true;
     }
-    return true;
 }
 
+/**
+ * @brief Loads the program and validates it
+ */
 bool Simulator::loadProgram(string fileName){
+    // Declare local variables
     string line;
 
-    //load in file
+    // Load file
     ifstream reader(fileName);
+    
+    // Return failed if file could not be read
     if (!reader) {
+        error = "The file does not exist or could not be opened. Verify the filename is valid and that the file is not currenly used by any other program.";
         return false;
     }
 
-    //count lines
+    // Declare line counter
     int i = 0;
+
+    // Loop through lines of file
     while(getline(reader, line)) {
+        // Discard over-length characters
         line = line.substr(0,32);
 
-        if (line.length() < 32) { //if line not 32 bits long then reject
+        // Return failed if lines are not of valid length
+        if (line.length() < 32) { 
+            error = "The machine code file includes lines of invalid length. Please supply a valid machine code file.";
             return false;
         }
+
+        // Attempt to push line to store
         try{
             store.at(i) = line; //add to store
         }
+        // Return failed if too many lines in input file
         catch(const std::out_of_range& err){
+            error = "The machine code file is larger than the memory space declared for this Simulator instance. Please declare more memory or supply a shorter machine code file.";
             return false;
         }
+
+        // Incremement counter
         i++;
     }
 
-    cout << "Loaded successfully" << endl;
+    // Return successful
     return true;
 }
 
@@ -130,7 +166,12 @@ void Simulator::run() {
         }
     }
     else{
-        // Display error message
+        helpers::clearScreen();
+        cout << BOLD(FRED("\n█▀█ █▀█ █▀█ █▀     █▀ █▀█ █▀▄▀█ █▀▀ ▀█▀ █ █ █ █▄ █ █▀▀   █ █ █ █▀▀ █▄ █ ▀█▀   █ █ █ █▀█ █▀█ █▄ █ █▀▀   ▀ ▄▀")) << endl;
+        cout <<   BOLD(FRED("█▄█ █▄█ █▀▀ ▄█ █   ▄█ █▄█ █ ▀ █ ██▄  █  █▀█ █ █ ▀█ █▄█   ▀▄▀▄▀ ██▄ █ ▀█  █    ▀▄▀▄▀ █▀▄ █▄█ █ ▀█ █▄█   ▄ ▀▄\n")) << endl << endl;
+        cout << "The Simulator instance you requested could not be set up, due to the following error:" << endl;
+        cout << error << endl;
+        helpers::waitForInput();
     }
 }
 
@@ -297,10 +338,9 @@ void Simulator::display() {
         // Loop through every line of vector (use vector iterator)
         // Display each line as binary (colour squared) and as a signed binary in decimal (binary::signedBinaryToDecimal(string))
  
-    int size = static_cast<int>(store.size()); //prevents comparison type error
     if (!store.empty()) {
         cout << BOLD(FCYN("\nStore")) << endl;
-        for (int i=0;i<size;i++) {
+        for (int i=0;i<memsize;i++) {
             int mem = binary::signedBinaryToDecimal(store.at(i));
             string memSqr;
             int memLen = store.at(i).length(); //prevents compile warning

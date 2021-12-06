@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <fstream>
 #include "../binary_library/binary.h"
 using namespace std;
 
@@ -56,6 +57,12 @@ class Simulator {
          */
         int memsize = 32;
 
+        /**
+         * @brief A string for the Simulator to store error messages in
+         * 
+         */
+        string error = "";
+
     public:
         /**
          * @brief Construct a new Simulator object
@@ -65,7 +72,7 @@ class Simulator {
         /**
          * @brief Sets up the Simulator object
          */
-        bool setup();
+        void setup();
 
         /**
          * @brief Loads the program and validates it

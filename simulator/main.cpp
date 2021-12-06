@@ -31,7 +31,8 @@ int getUserInput(){
     string input;
     cin >> input;
 
-    cin.ignore(1000, '\n'); //if invalid input clear buffer 
+    // Clear the input buffer to remove any pending tokens
+    cin.ignore(1000, '\n');
 
     if(input == "1"){
         return 1;
@@ -57,7 +58,6 @@ int main(){
         }
         else if(input == 0){
             quit = true;
-            helpers::clearScreen();
         }
     }while(!quit);
 }
