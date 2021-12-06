@@ -1,13 +1,6 @@
 #include "Simulator.h"
-#include <fstream>
 #include "Colors.h"
-
-int main() {
-
-    Simulator sim;
-    sim.display();
-    return 0;
-}
+#include <fstream>
 
 Simulator::Simulator(){
     // Initialise registers
@@ -26,6 +19,7 @@ bool Simulator::setup(){
     string infoChoice;
     int memoryChoice;
     string stepChoice;
+    string filename;
     std::vector<string> memory;
 
     //get user input for if info should be displayed
@@ -70,9 +64,16 @@ bool Simulator::setup(){
         cout << "invalid input, set to 32 as default" << endl;
     }
 
+    cin.ignore(1000, '\n'); //if invalid input clear buffer 
+
+    //get user input for filename
+    cout << "\nPlease enter the path of the machine code file:" << endl;
+    cin >> filename;
+
     //call load and check if successful
-    if (loadProgram() == true);
+    if (loadProgram(filename) == true){
         ready = true;
+    }
     return true;
 }
 
