@@ -148,54 +148,76 @@ bool Simulator::loadProgram(string fileName){
     return true;
 }
 
+/**
+ * @brief Runs the simulator with the settings set previously (only if ready == true)
+ */
 void Simulator::run() {
+    // Verify that the Simulator was correctly initiated
     if (ready==true) {
+        // Loop through the fetch-execute cycle while the program is not completed yet
         while(!done){
+            // Clear the screen
             helpers::clearScreen();
+
+            // Fetch-execute operations
             incrementCI();
             fetch();
             decodeAndExecute();
+
+            // If step-by-step execution is requested, display everything
             if(step == true){
                 display();
                 helpers::waitForInput();
             }
         }
+
+        // If step-by-step execution was not requested, only display after execution
         if(step == false){
             display();
             helpers::waitForInput();
         }
     }
+    // If the Simulator was not initiated correcly, send error
     else{
+        // Clear the screen
         helpers::clearScreen();
+
+        // Print large font
         cout << BOLD(FRED("\n█▀█ █▀█ █▀█ █▀     █▀ █▀█ █▀▄▀█ █▀▀ ▀█▀ █ █ █ █▄ █ █▀▀   █ █ █ █▀▀ █▄ █ ▀█▀   █ █ █ █▀█ █▀█ █▄ █ █▀▀   ▀ ▄▀")) << endl;
         cout <<   BOLD(FRED("█▄█ █▄█ █▀▀ ▄█ █   ▄█ █▄█ █ ▀ █ ██▄  █  █▀█ █ █ ▀█ █▄█   ▀▄▀▄▀ ██▄ █ ▀█  █    ▀▄▀▄▀ █▀▄ █▄█ █ ▀█ █▄█   ▄ ▀▄\n")) << endl << endl;
+        
+        // Print error message
         cout << "The Simulator instance you requested could not be set up, due to the following error:" << endl;
         cout << error << endl;
+
+        // Press enter to continue
         helpers::waitForInput();
     }
 }
 
+/**
+ * @brief Increase the CI value by 1
+ */
 void Simulator::incrementCI() {
     ci++;
 }
 
+/**
+ * @brief Gets the value at store index CI and loads it into PI
+ */
 void Simulator::fetch() {
-    
-    //checks if ci is over memory capacity
-    if (ci >=memsize)
-    {
+    // Checks if ci is over memory capacity
+    if (ci >=memsize){
         throw invalid_argument("The CI counter exceeds the memory size of the computer.");
     }
     
-    
-  
-    //use number to find line in store file
+    // Use number to find line in store vector
     pi = store[ci];
-   
-    
-
 }
 
+/**
+ * @brief Decodes the PI, fetches operand and executes the instruction specified
+ */
 void Simulator::decodeAndExecute() {
     // Get instruction from register
     string instruction = pi;
@@ -265,13 +287,14 @@ void Simulator::decodeAndExecute() {
     }
 }
 
-//might need to add spaces between squares?
+/**
+ * @brief Display registers and stores
+ */
 void Simulator::display() { 
+    // Register size
+    int sqrLen = 32; 
+
     // Display stop lamp
-        // cyan or white square depending on whether done is true or false
-
-    int sqrLen = 32; //bit number
-
     if(done) {
         cout << BOLD(FCYN("STOP")) << "\t\t"<< FCYN(SQR) << endl; 
     }else {
@@ -279,20 +302,23 @@ void Simulator::display() {
     }
     
 
-    // Display values of registers in binary form (coloured squares) and in decimal (use binary::(un)signedBinaryToDecimal())
-        // display CI (unsigned binary)
+    // Display values of registers in binary form (coloured squares) and in decimal (use binary::(un)signedBinaryToDecimal())    
     
+    // Output CI
     string tempCi = binary::decimalToUnsignedBinary(ci,sqrLen);
     string ciSqr; //squares of ci
     for (int i=0;i<sqrLen;i++) {
         if (tempCi.at(i)=='1') {
             ciSqr += FCYN(SQR);
-        }else {
+        }
+        else {
             ciSqr += FBLK(SQR);
-        } ciSqr += " ";
-    }cout << BOLD(FCYN("CI")) << "\t\t" << ciSqr << "\t" << ci << endl;
+        } 
+        ciSqr += " ";
+    }
+    cout << BOLD(FCYN("CI")) << "\t\t" << ciSqr << "\t" << ci << endl;
 
-        // display PI (unsigned binary)
+    // Output PI
     int piVal = binary::unsignedBinaryToDecimal(pi);
     string piSqr; //squares of pi
     if (pi.length()>1) { //string validation
@@ -300,12 +326,14 @@ void Simulator::display() {
         for (int i=0;i<piLen;i++) {
             if (pi.at(i)=='1') {
                 piSqr += FCYN(SQR);
-            }else {
+            }
+            else {
                 piSqr += FBLK(SQR);
             }
             piSqr += " ";
         }
-    }else {
+    }
+    else {
         for (int i=0;i<sqrLen;i++) {
             piSqr += FBLK(SQR);
             piSqr += " ";
@@ -314,7 +342,7 @@ void Simulator::display() {
     cout << BOLD(FCYN("PI")) << "\t\t" << piSqr << "\t" << piVal << endl;
 
 
-        // display accumulator (signed binary)
+    // Output accumulator
     int accVal = binary::signedBinaryToDecimal(acc);
     string accSqr; //squares of acc
     if (acc.length()>1) { //string validation
@@ -322,11 +350,14 @@ void Simulator::display() {
         for (int i=0;i<accLen;i++) {
             if (acc.at(i)=='1') {
                 accSqr += FCYN(SQR);
-            }else {
+            }
+            else {
                 accSqr += FBLK(SQR);
-            }accSqr += " ";
+            }
+            accSqr += " ";
         }
-    }else {
+    }
+    else {
         for (int i=0;i<sqrLen;i++) {
             accSqr += FBLK(SQR);
             accSqr += " ";
@@ -335,9 +366,7 @@ void Simulator::display() {
     cout << BOLD(FCYN("Accumulator")) << "\t" << accSqr << "\t" << accVal << endl;
 
     // Display memory
-        // Loop through every line of vector (use vector iterator)
-        // Display each line as binary (colour squared) and as a signed binary in decimal (binary::signedBinaryToDecimal(string))
- 
+    // Display each line as binary (colour squared) and as a signed binary in decimal (binary::signedBinaryToDecimal(string))
     if (!store.empty()) {
         cout << BOLD(FCYN("\nStore")) << endl;
         for (int i=0;i<memsize;i++) {
@@ -348,12 +377,14 @@ void Simulator::display() {
                     for (int j=0;j<memLen;j++) {
                         if (store.at(i).at(j)=='1') {
                             memSqr += FCYN(SQR);
-                        }else {
+                        }
+                        else {
                             memSqr += FBLK(SQR);
                         }
                         memSqr += " ";
                     }
-                }else {
+                }
+                else {
                     for (int j=0;j<memLen;j++) {
                         memSqr += FBLK(SQR);
                         memSqr += " ";
@@ -364,26 +395,5 @@ void Simulator::display() {
             cout << valid << "\t\t" << memSqr << "\t" << mem << endl;
         }
     }
-
-    // Old code
-
-    // int value = 0; //default value to be changed later once data is given
-
-    // //outputs 0 if the strings pi and acc are empty
-    // string piVal = pi;
-    // if (pi=="") {
-    //     piVal = "0";
-    // }
-    // string accVal = acc;
-    // if (acc=="") {
-    //     accVal = "0";
-    // }
-
-
-    // cout << "\n" << BOLD(FCYN("Memory")) << "\t\t" << value << endl; //store?
-    // cout << BOLD(FCYN("MemoryVal")) << "\t" << &store << endl; //pointer of store
-    // cout << BOLD(FCYN("RegisterVal")) << "\t" << &value << endl; //pointer of register
-    // cout << BOLD(FCYN("I/O")) << "\t\t" << value << endl;
-    // cout << BOLD(FCYN("STOP")) << endl;
 }
 
