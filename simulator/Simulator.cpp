@@ -1,3 +1,10 @@
+/**
+ * @file Simulator.cpp
+ * @authors [Group 1] Elliot Scott (2413916), Ross Coombs (2410466), Heather Currie (2411616), Jack Wiggall (2413924), Kai Uerlichs (2421101)
+ *
+ * @brief The source code for the Simulator class, representing a functionally expanded model of the Manchester SSEM (Baby)
+ */
+
 // Necessary includes
 #include "Simulator.h"
 #include "Colors.h"

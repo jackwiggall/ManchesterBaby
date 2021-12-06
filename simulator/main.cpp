@@ -1,3 +1,10 @@
+/**
+ * @file main.cpp
+ * @authors [Group 1] Elliot Scott (2413916), Ross Coombs (2410466), Heather Currie (2411616), Jack Wiggall (2413924), Kai Uerlichs (2421101)
+ * 
+ * @brief This file is responsible for the main control flow of the Simulator program and displays the main menu
+ */
+
 #include "Simulator.h"
 #include "Colors.h"
 #include "helpers.h"
@@ -5,6 +12,9 @@
 
 using namespace std;
 
+/**
+ * @brief Displays "Manchester Baby Simulator" using ASCII art
+ */
 void displayBigFont(){
     cout << endl;
     cout << "\x1B[34m█▀▄▀█ \x1B[36m▄▀█ \x1B[32m█▄ █ \x1B[33m█▀▀ \x1B[35m█ █ \x1B[31m█▀▀ \x1B[34m█▀ \x1B[36m▀█▀ \x1B[32m█▀▀ \x1B[33m█▀█   \x1B[35m█▄▄ \x1B[31m▄▀█ \x1B[34m█▄▄ \x1B[36m█▄█   \x1B[32m█▀ \x1B[33m█ \x1B[35m█▀▄▀█ \x1B[31m█ █ \x1B[34m█   \x1B[36m▄▀█ \x1B[32m▀█▀ \x1B[33m█▀█ \x1B[35m█▀█\x1B[0m" << endl;
@@ -12,6 +22,9 @@ void displayBigFont(){
     cout << endl;
 }
 
+/**
+ * @brief Outputs info text 
+ */
 void displayInfoMessage(){
     cout << endl;
     cout << "This program simulates the Manchester SSEM, nicknamed Manchester Baby. In order to use it, you will need a valid machine code file," << endl;
@@ -25,15 +38,23 @@ void displayInfoMessage(){
     cout << endl;
 }
 
+/**
+ * @brief Gets the user input 
+ * 
+ * @return int The users selection
+ */
 int getUserInput(){
+    // Output prompt
     cout << "\x1B[36mStart Simulator [1]\t\x1B[31mExit[0]\x1B[0m" << endl;
     
+    // Read in a string
     string input;
     cin >> input;
 
     // Clear the input buffer to remove any pending tokens
     cin.ignore(1000, '\n');
 
+    // Evaluate response
     if(input == "1"){
         return 1;
     }
@@ -43,6 +64,11 @@ int getUserInput(){
     return -1;
 }
 
+/**
+ * @brief Starts the program and controls main loop
+ * 
+ * @return int Execution success code
+ */
 int main(){
     bool quit = false;
     do{
@@ -60,4 +86,6 @@ int main(){
             quit = true;
         }
     }while(!quit);
+
+    return 0;
 }

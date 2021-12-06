@@ -1,10 +1,25 @@
-#ifndef _COLORS_
-#define _COLORS_
+/**
+ * @file Colors.h
+ * @author gon1332
+ * @anchor https://stackoverflow.com/questions/1780599/what-is-the-meaning-of-posix
+ * 
+ * @authors [Group 1] Elliot Scott (2413916), Ross Coombs (2410466), Heather Currie (2411616), Jack Wiggall (2413924), Kai Uerlichs (2421101)
+ * 
+ * @brief Header file providing constants for coloured output in the std output
+ */
+
+
+// Header guard
+#ifndef COLORS_H
+#define COLORS_H
+
+// Necessary includes
 #include <stdlib.h>
 
+// Define square character
 #define SQR  "\u25A0"
 
-/* FOREGROUND */
+// Define forground colour codes
 #define RST  "\x1B[0m"
 #define KBLK  "\x1B[30m"
 #define KRED  "\x1B[31m"
@@ -15,6 +30,7 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
+// Define constant colour functions
 #define FBLK(x) KBLK x RST
 #define FRED(x) KRED x RST
 #define FGRN(x) KGRN x RST
@@ -24,11 +40,5 @@
 #define FCYN(x) KCYN x RST
 #define FWHT(x) KWHT x RST
 
-#define BOLD(x) "\x1B[1m" x RST
-#define UNDL(x) "\x1B[4m" x RST
-
-#endif  /* _COLORS_ */
-
-//Source: https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
-//NOTE: Not compatible with all versions
-//system("Color E5") works on some versions but also sends error on others though E5 might not be best choice
+// End header guard
+#endif 
