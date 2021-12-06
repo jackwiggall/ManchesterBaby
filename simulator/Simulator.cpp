@@ -1,14 +1,6 @@
 #include "Simulator.h"
 #include "Colors.h"
 
-
-int main() {
-
-    Simulator sim;
-    sim.display();
-    return 0;
-}
-
 Simulator::Simulator(){
     // Initialise registers
     ci = 0;
@@ -71,8 +63,9 @@ bool Simulator::setup(){
     }
 
     //call load and check if successful
-    if (loadProgram() == true);
+    if (loadProgram() == true){
         ready = true;
+    }
     return true;
 }
 

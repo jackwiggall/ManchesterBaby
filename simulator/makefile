@@ -4,8 +4,11 @@ CC = g++
 #flags
 FLAGS = -std=c++17 -Wall -Wextra -pedantic -g
 
-all: Simulator.o binary.o
-	$(CC) $(FLAGS) Simulator.o binary.o -o outfile
+all: main.o Simulator.o binary.o
+	$(CC) $(FLAGS) main.o Simulator.o binary.o -o outfile
+
+main.o: main.cpp
+	$(CC) $(FLAGS) -c main.cpp
 
 Simulator.o: Simulator.cpp Simulator.h Colors.h
 	$(CC) $(FLAGS) -c Simulator.cpp
