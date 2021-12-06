@@ -1,5 +1,6 @@
 #include "Simulator.h"
 #include "Colors.h"
+#include "helpers.h"
 #include <fstream>
 #include <algorithm>
 
@@ -17,6 +18,7 @@ Simulator::Simulator(){
  *  Function sets up the simulator by setting the starting values (memory size, info and step) and calls the load function.
  */
 bool Simulator::setup(){
+    helpers::clearScreen();
     string infoChoice;
     int memoryChoice;
     string stepChoice;
@@ -113,10 +115,18 @@ bool Simulator::loadProgram(string fileName){
 void Simulator::run() {
     if (ready==true) {
         while(!done){
+            helpers::clearScreen();
             incrementCI();
             fetch();
             decodeAndExecute();
+            if(step == true){
+                display();
+                helpers::waitForInput();
+            }
+        }
+        if(step == false){
             display();
+            helpers::waitForInput();
         }
     }
     else{

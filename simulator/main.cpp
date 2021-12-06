@@ -1,5 +1,6 @@
 #include "Simulator.h"
 #include "Colors.h"
+#include "helpers.h"
 #include <iostream>
 
 using namespace std;
@@ -41,28 +42,22 @@ int getUserInput(){
     return -1;
 }
 
-void clearScreen(){
-    cout << "\033[2J\033[1;1H";
-}
-
 int main(){
     bool quit = false;
     do{
-        clearScreen();
+        helpers::clearScreen();
         displayBigFont();
         displayInfoMessage();
         int input = getUserInput();
 
         if(input == 1){
-            clearScreen();
-            cout << "RUNNING" << endl;
             Simulator s;
             s.setup();
             s.run();
         }
         else if(input == 0){
             quit = true;
-            clearScreen();
+            helpers::clearScreen();
         }
     }while(!quit);
 }
