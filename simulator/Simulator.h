@@ -1,10 +1,20 @@
+/**
+ * @file Simulator.h
+ * @authors [Group 1] Elliot Scott (2413916), Ross Coombs (2410466), Heather Currie (2411616), Jack Wiggall (2413924), Kai Uerlichs (2421101)
+ *
+ * @brief The header file for the Simulator class, representing a functionally expanded model of the Manchester SSEM (Baby)
+ */
+
+// Header guard
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
+// Necessary includes
 #include <iostream>
 #include <vector>
 #include <string>
 #include <cmath>
+#include <fstream>
 #include "../binary_library/binary.h"
 using namespace std;
 
@@ -56,6 +66,12 @@ class Simulator {
          */
         int memsize = 32;
 
+        /**
+         * @brief A string for the Simulator to store error messages in
+         * 
+         */
+        string error = "";
+
     public:
         /**
          * @brief Construct a new Simulator object
@@ -65,7 +81,7 @@ class Simulator {
         /**
          * @brief Sets up the Simulator object
          */
-        bool setup();
+        void setup();
 
         /**
          * @brief Loads the program and validates it
@@ -99,4 +115,5 @@ class Simulator {
 
 };
 
+// End of header guard
 #endif
