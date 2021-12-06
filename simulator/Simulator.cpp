@@ -2,11 +2,6 @@
 #include <fstream>
 
 int main() {
-
-    Simulator sim;
-    if(sim.loadProgram()){
-        cout << "true";
-    }
     return 0;
 }
 
@@ -20,10 +15,10 @@ bool Simulator::setup(){
     return false;
 }
 
-bool Simulator::loadProgram(){
+bool Simulator::loadProgram(string fileName){
     string line;
     //load in file
-    ifstream reader("../BabyCode/BabyTest1-MC.txt");
+    ifstream reader(fileName);
     if (!reader) {
         return false;
     }
@@ -36,9 +31,15 @@ bool Simulator::loadProgram(){
         store.push_back(line); //add to store
         i++;
     }
-    //check memory is big enough
-    if (i > memsize) {
+    //check memory was big enough
+    if (i >= memsize) {
         return false;
+    } else {
+        //fill remaining memory with 0s
+        for (i; i < memsize; i++)
+        {
+            store.push_back("00000000000000000000000000000000");
+        }
     }
     return true;
 }
