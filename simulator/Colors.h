@@ -1,7 +1,7 @@
 /**
  * @file Colors.h
  * @author gon1332
- * @anchor https://stackoverflow.com/questions/1780599/what-is-the-meaning-of-posix
+ * @anchor https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
  * 
  * @authors [Group 1] Elliot Scott (2413916), Ross Coombs (2410466), Heather Currie (2411616), Jack Wiggall (2413924), Kai Uerlichs (2421101)
  * 
@@ -39,6 +39,7 @@
 #define FMAG(x) KMAG x RST
 #define FCYN(x) KCYN x RST
 #define FWHT(x) KWHT x RST
+#define BOLD(x) "\x1B[1m" x RST
 
 // End header guard
 #endif 

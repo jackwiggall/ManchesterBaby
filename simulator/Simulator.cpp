@@ -173,6 +173,13 @@ void Simulator::run() {
 
             // If step-by-step execution is requested, display everything
             if(step == true){
+                // Display cycle information
+                if(info){
+                    cout << endl << FCYN("[CYCLE INFO] ") << "The fetch-execute cycle has ended..." << endl;
+                    helpers::waitForInput();
+                }
+
+                helpers::clearScreen();
                 display();
                 helpers::waitForInput();
             }
@@ -206,6 +213,19 @@ void Simulator::run() {
  * @brief Increase the CI value by 1
  */
 void Simulator::incrementCI() {
+    // Display cycle information
+    if(info){
+        int bits = ceil(log(memsize)/log(2));
+
+        cout << endl << FCYN("[CYCLE INFO] ") << "A new fetch-execute cycle has started..." << endl << endl;
+        cout << FCYN("* ") << "First, the current instrucion counter, which tells the Baby which line of memory to read, is incremented by 1." << endl;
+        cout << FCYN("* ") << "Previous value:\t" << ci << "\t$" << binary::decimalToUnsignedBinary(ci, bits) << endl;
+        cout << FCYN("* ") << "Updated value:\t" << (ci+1) << "\t$" << binary::decimalToUnsignedBinary(ci+1, bits) << endl;
+
+        helpers::waitForInput();
+    }
+
+    // Increase CI
     ci++;
 }
 
@@ -220,6 +240,15 @@ void Simulator::fetch() {
     
     // Use number to find line in store vector
     pi = store[ci];
+
+    // Display cycle information
+    if(info){
+        cout << endl << FCYN("* ") << "Next, the instruction fetch occurs. Here, we copy the value at the memory address stored in CI into" << endl;
+        cout << FCYN("* ") << "the present instruction register, so we can work with it. The PI register now holds the following." << endl;
+        cout << FCYN("* ") << "Present instruction:\t$" << pi << "\t" << binary::unsignedBinaryToDecimal(pi) << endl;
+
+        helpers::waitForInput();
+    }
 }
 
 /**
@@ -248,39 +277,125 @@ void Simulator::decodeAndExecute() {
         operand = store[addr];
     }
 
+    // Display cycle information
+    if(info){
+        string opcodeMneumonic = "";
+        cout << endl << FCYN("* ") << "Now we have to decode the instruction. We can work out the opcode by looking at bits 13-15, and" << endl;
+        cout << FCYN("* ") << "the operand address by looking at a number of bits at the beginning of the instruction (depending" << endl;
+        cout << FCYN("* ") << "on the amount of memory declared in the Simulator. The CMP and HLT instructions have no operands." << endl;
+
+        int opcodeDec = binary::unsignedBinaryToDecimal(opcode);
+        switch (opcodeDec){
+        case 0: opcodeMneumonic = "JMP"; break;
+        case 1: opcodeMneumonic = "JRP"; break;
+        case 2: opcodeMneumonic = "LDN"; break;
+        case 3: opcodeMneumonic = "STO"; break;
+        case 4: opcodeMneumonic = "SUB"; break;
+        case 5: opcodeMneumonic = "SUB"; break;
+        case 6: opcodeMneumonic = "CMP"; break;
+        case 7: opcodeMneumonic = "HLT"; break;
+        }
+
+        cout << FCYN("* ") << "Opcode:\t\t$" << opcode << "\t" << opcodeDec << "\t" << opcodeMneumonic << endl;
+        if(operand != ""){
+            cout << FCYN("* ") << "Operand address:\t$" << address << "\t" << addr << endl;
+        }
+
+        helpers::waitForInput();
+
+        if(operand != ""){
+            cout << endl << FCYN("* ") << "Since " << opcodeMneumonic << " requires an operand, we now need to fetch it from the store. The operand address " << endl;
+            cout << FCYN("* ") << "was specified in the instruction, so we know where to look." << endl;
+
+            cout << FCYN("* ") << "Operand at $" << address << ":\t$" << operand << "\t" << binary::signedBinaryToDecimal(operand) << endl;
+
+            helpers::waitForInput();
+        }
+    }
+
     // Check opcodes in string representation to avoid unnecessary calculations
 
     // Jump to a memory location specified by the value at memory location specified by operand
     if(opcode == "000" /* 0 JMP */){
+         // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was JMP, we know we need to execute a jump instruction. " << endl;
+            cout << endl << FCYN("* ") << "This means, we set the CI register to the current operand value." << endl;
+
+            helpers::waitForInput();
+        }
+
         ci = binary::unsignedBinaryToDecimal(operand);
         return;
     }
 
     // Jump Relative by adding the value at memoroy location specified by operand to CI
     if(opcode == "100" /* 1 JRP */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was JRP, we know we need to execute a relative jump. " << endl;
+            cout << FCYN("* ") << "This means, we add the current operand value to the CI register, jumping ahead in the program by a number of" << endl;
+            cout << FCYN("* ") << "lines given by the operand." << endl;
+
+            helpers::waitForInput();
+        }
+
         ci += binary::unsignedBinaryToDecimal(operand);
         return;
     }
 
     // Load negative of value at memoroy location specified by operand into accumulator
     if(opcode == "010" /* 2 LDN */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was LDN, we know we need to execute a Load Negative instruction. " << endl;
+            cout << FCYN("* ") << "This means, we load the negation of the current operand value into the accumulator." << endl;
+
+            helpers::waitForInput();
+        }
+
         acc = binary::getTwosCompliment(operand);
         return;
     }
 
     // Store value in accumulator into memory location specified by operand
     if(opcode == "110" /* 3 STO */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was STO, we know we need to execute a Store instruction. " << endl;
+            cout << FCYN("* ") << "This means, we copy the value of the accumulator into the memory location specified by the operand address." << endl;
+
+            helpers::waitForInput();
+        }
+
         store[addr] = acc;
         return;
     }
 
     // Subtract value at memoroy location specified by operand from accumulator and store result in accumulator
     if(opcode == "001" || opcode == "101" /* 4,5 SUB */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was SUB, we know we need to execute a subtraction. " << endl;
+            cout << FCYN("* ") << "This means, we subtract the operand value from the accumulator, and store the result in the accumulator." << endl;
+
+            helpers::waitForInput();
+        }
+
         acc = binary::binarySubtract(acc, operand);
+        return;
     }
 
     // If value in accumulator is less than zero, increment CI by one
     if(opcode == "011" /* 6 CMP */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was CMP, we know we need to execute a compare instruction. " << endl;
+            cout << FCYN("* ") << "This means, we first check if the accumulator is less than zero. If it is, we increment CI by 1.." << endl;
+
+            helpers::waitForInput();
+        }
+
         if(binary::signedBinaryToDecimal(acc) < 0){
             ci++;
         }
@@ -289,6 +404,13 @@ void Simulator::decodeAndExecute() {
 
     // Halt the program
     if(opcode == "111" /* 7 STP */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. We have encountered the HLT instruction. The program now terminates. " << endl;
+
+            helpers::waitForInput();
+        }
+        
         done = true;
         return;
     }
@@ -298,16 +420,18 @@ void Simulator::decodeAndExecute() {
  * @brief Display registers and stores
  */
 void Simulator::display() { 
+    cout << BOLD(FCYN("\n---CURRENT REGISTER AND STORE STATES---\n")) << endl;
+    
     // Register size
     int sqrLen = 32; 
 
     // Display stop lamp
     if(done) {
         cout << BOLD(FCYN("STOP")) << "\t\t"<< FCYN(SQR) << endl; 
-    }else {
+    }
+    else {
         cout << BOLD(FCYN("STOP")) << "\t\t"<< FBLK(SQR) << endl;
     }
-    
 
     // Display values of registers in binary form (coloured squares) and in decimal (use binary::(un)signedBinaryToDecimal())    
     
