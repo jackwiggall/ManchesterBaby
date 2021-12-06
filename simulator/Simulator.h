@@ -70,7 +70,7 @@ class Simulator {
         /**
          * @brief Loads the program and validates it
          */
-        bool loadProgram();
+        bool loadProgram(string fileName);
 
         /**
          * @brief Runs the simulator with the settings set previously (only if ready == true)
