@@ -1,6 +1,7 @@
 #include "Simulator.h"
 #include "Colors.h"
 #include <fstream>
+#include <algorithm>
 
 Simulator::Simulator(){
     // Initialise registers
@@ -70,6 +71,8 @@ bool Simulator::setup(){
     cout << "\nPlease enter the path of the machine code file:" << endl;
     cin >> filename;
 
+    cin.ignore(1000, '\n'); //if invalid input clear buffer 
+
     //call load and check if successful
     if (loadProgram(filename) == true){
         ready = true;
@@ -79,30 +82,31 @@ bool Simulator::setup(){
 
 bool Simulator::loadProgram(string fileName){
     string line;
+
     //load in file
     ifstream reader(fileName);
     if (!reader) {
         return false;
     }
+
     //count lines
     int i = 0;
     while(getline(reader, line)) {
-        if (line.length() >= 32) { //if line not 32 bits long then reject
+        line = line.substr(0,32);
+
+        if (line.length() < 32) { //if line not 32 bits long then reject
             return false;
         }
-        store.push_back(line); //add to store
+        try{
+            store.at(i) = line; //add to store
+        }
+        catch(const std::out_of_range& err){
+            return false;
+        }
         i++;
     }
-    //check memory was big enough
-    if (i >= memsize) {
-        return false;
-    } else {
-        //fill remaining memory with 0s
-        for (; i < memsize; i++)
-        {
-            store.push_back("00000000000000000000000000000000");
-        }
-    }
+
+    cout << "Loaded successfully" << endl;
     return true;
 }
 

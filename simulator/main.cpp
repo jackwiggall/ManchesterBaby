@@ -30,6 +30,8 @@ int getUserInput(){
     string input;
     cin >> input;
 
+    cin.ignore(1000, '\n'); //if invalid input clear buffer 
+
     if(input == "1"){
         return 1;
     }
@@ -52,6 +54,8 @@ int main(){
         int input = getUserInput();
 
         if(input == 1){
+            clearScreen();
+            cout << "RUNNING" << endl;
             Simulator s;
             s.setup();
             s.run();
