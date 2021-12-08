@@ -21,7 +21,7 @@ class Assembler{
         std::vector<instruction> instructionSet;
 
     public:
-        Assembler();
+        Assembler(int memory);
         ~Assembler();
 
         bool loadInstructionSet(std::string filename);

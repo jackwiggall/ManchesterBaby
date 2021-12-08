@@ -1,8 +1,13 @@
 #include "Assembler.h"
 using namespace std;
 
-Assembler::Assembler(){
-
+Assembler::Assembler(int memory){
+	if(memory > 32){
+		maxMemory = memory;
+	}
+	else{
+		throw invalid_argument("001");
+	}
 }
 
 Assembler::~Assembler(){
@@ -12,7 +17,7 @@ Assembler::~Assembler(){
 bool Assembler::loadInstructionSet(std::string filename){
     // Declare local variables
     string line;
-    char opcode;
+    int opcode;
     instruction instruction;
     
     // Load file
@@ -20,17 +25,17 @@ bool Assembler::loadInstructionSet(std::string filename){
     
     // Return failed if file could not be read
     if (!reader) {
-        //error = "The file does not exist or could not be opened. Verify the filename is valid and that the file is not currenly used by any other program.";
-        return false;
+        throw invalid_argument("201");
     }
 
     // Declare line counter
     int i = 0;
     // Loop through lines of file
     while(getline(reader, line)) {
-        instruction.mneumonic = line.substr(0,2); //get mnemonic
-        opcode = line.back(); //get opcode
-        instruction.opcode = (int)opcode - 48; //convert opcode to int
+		vector<string> token = strsplit(line,",");
+        instruction.mneumonic = token[0]; //get mnemonic
+        opcode = stoi(token[1]); //get opcode
+        instruction.opcode = opcode; //convert opcode to int
         instructionSet.push_back(instruction); //add to set
     }
     return true;
