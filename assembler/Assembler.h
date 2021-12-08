@@ -5,6 +5,8 @@
 #include <vector>
 #include <fstream>
 #include "../binary_library/binary.h"
+#include <fstream>
+#include <iostream>
 
 class Assembler{
     struct instruction{
@@ -28,7 +30,20 @@ class Assembler{
         int getOpcode(std::string mneumonic);
 
         void assemble(std::string filename);
-        void processLine(std::string line);
+        void processLine(std::string line, int &counter, int iteration);
+      
+      
+        /**
+         * @brief A function to tokenize a string based on a delimiter and return a corresponding vector
+         * 
+         * @param str The string to tokenize
+         * @param delim The delimter string
+         * @return vector<string> A vector of string tokens
+         * 
+         * @authors https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
+         * @note Comments added by group members
+         */
+        vector<string> strsplit(const string& str, const string& delim);
 };
 
 class SymbolTable{
@@ -67,6 +82,7 @@ class SymbolTable{
          * @return std::string The address
          */
         std::string getAddress(int index);
+
 };
 
 class OutputBuffer{
