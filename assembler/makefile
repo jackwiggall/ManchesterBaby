@@ -15,7 +15,7 @@ FLAGS = -std=c++17 -Wall -Wextra -pedantic -g
 
 # This target compiles the entire program
 all: main.o Assembler.o binary.o
-	$(CC) $(FLAGS) main.o Assembler.o binary.o -o assemble.out
+	$(CC) $(FLAGS) main.o Assembler.o binary.o -o Assembler.out
 
 exec: all
 	-@rm *.o 2>/dev/null || true
@@ -34,4 +34,4 @@ binary.o: ../binary_library/binary.cpp ../binary_library/binary.h
 
 # This target clears every outfiles and object code files
 clean:
-	-@rm *.o assemble.out 2>/dev/null || true
+	-@rm *.o Assembler.out 2>/dev/null || true
