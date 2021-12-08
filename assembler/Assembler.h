@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "../binary_library/binary.h"
-#include <fstream>
 #include <iostream>
+#include "../binary_library/binary.h"
+#include "Colors.h"
 
 class SymbolTable{
     struct entry {

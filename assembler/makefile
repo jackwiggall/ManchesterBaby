@@ -1,10 +1,10 @@
 # @file makefile
 # @authors [Group 1] Elliot Scott (2413916), Ross Coombs (2410466), Heather Currie (2411616), Jack Wiggall (2413924), Kai Uerlichs (2421101)
 # 
-# @brief This makefile automates the compilation process of the Simulator program
+# @brief This makefile automates the compilation process of the Assembler program
 
 ##################################################################################################################
-# To compile the Simulator fully, simply run "make" while in the simulator directory                             #
+# To compile the Simulator fully, simply run "make" while in the Assembler directory                             #
 ##################################################################################################################
 
 # Define compiler
@@ -18,7 +18,7 @@ all: main.o Assembler.o binary.o
 	$(CC) $(FLAGS) main.o Assembler.o binary.o -o assemble.out
 
 exec: all
-	-@rm *.o assemble.out 2>/dev/null || true
+	-@rm *.o 2>/dev/null || true
 
 # main.o target compiles the main source code into object code
 main.o: main.cpp 
