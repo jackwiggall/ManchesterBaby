@@ -72,7 +72,11 @@ void Assembler::assemble(std::string filename){
 
                 try
                 {
-                    processLine(line, instructionCounter, i);
+                    if (i == 2 && out.getLineDone(instructionCounter) == false)
+                    {
+                        processLine(line, instructionCounter, i);
+                    }
+                    
                 }
                 catch(const std::exception& e)
                 {
@@ -108,6 +112,7 @@ void Assembler::assemble(std::string filename){
             }
             reader.clear();
             reader.seekg(0);
+            instructionCounter = 0;
         }
         reader.close();
     }
