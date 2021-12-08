@@ -117,7 +117,7 @@ void Assembler::assemble(std::string filename){
         reader.close();
     }
     else{
-        cout << "200" << endl;
+        cout << "202" << endl;
     }
     
 
