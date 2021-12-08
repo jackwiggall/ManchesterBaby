@@ -8,44 +8,6 @@
 #include <fstream>
 #include <iostream>
 
-class Assembler{
-    struct instruction{
-        std::string mneumonic;
-        int opcode;
-    };
-    private:
-        int currentLine = 0;
-        int maxMemory = 32;
-
-        SymbolTable sym;
-        OutputBuffer out;
-
-        std::vector<instruction> instructionSet;
-
-    public:
-        Assembler(int memory);
-        ~Assembler();
-
-        bool loadInstructionSet(std::string filename);
-        int getOpcode(std::string mneumonic);
-
-        void assemble(std::string filename);
-        void processLine(std::string line, int &counter, int iteration);
-      
-      
-        /**
-         * @brief A function to tokenize a string based on a delimiter and return a corresponding vector
-         * 
-         * @param str The string to tokenize
-         * @param delim The delimter string
-         * @return vector<string> A vector of string tokens
-         * 
-         * @authors https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
-         * @note Comments added by group members
-         */
-        vector<string> strsplit(const string& str, const string& delim);
-};
-
 class SymbolTable{
     struct entry {
         std::string label;
@@ -102,6 +64,47 @@ class OutputBuffer{
         bool getLineDone(int lineNumber);
         void addLine(std::string output, bool done);
         void setLine(std::string output, bool done, int lineNumber);
+        void saveToFile(std::string filename);
+};
+
+class Assembler{
+    struct instruction{
+        std::string mneumonic;
+        int opcode;
+    };
+    private:
+        int currentLine = 0;
+        int maxMemory = 32;
+
+        SymbolTable sym;
+        OutputBuffer out;
+
+        std::vector<instruction> instructionSet;
+
+    public:
+        Assembler(int memory);
+        ~Assembler();
+
+        bool loadInstructionSet(std::string filename);
+        int getOpcode(std::string mneumonic);
+
+        void assemble(std::string filename);
+        void processLine(std::string line, int &counter, int iteration);
+
+        void exportToFile(std::string filename);
+      
+      
+        /**
+         * @brief A function to tokenize a string based on a delimiter and return a corresponding vector
+         * 
+         * @param str The string to tokenize
+         * @param delim The delimter string
+         * @return vector<string> A vector of string tokens
+         * 
+         * @authors https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
+         * @note Comments added by group members
+         */
+        std::vector<std::string> strsplit(const std::string& str, const std::string& delim);
 };
 
 #endif

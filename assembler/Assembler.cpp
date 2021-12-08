@@ -11,7 +11,7 @@ using namespace std;
  * @authors https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
  * @note Comments added by group members
  */
-vector<string> strsplit(const string& str, const string& delim)
+vector<string> Assembler::strsplit(const string& str, const string& delim)
 {
     vector<string> tokens;
     size_t prev = 0, pos = 0;
@@ -28,7 +28,7 @@ vector<string> strsplit(const string& str, const string& delim)
 }
 
 Assembler::Assembler(int memory){
-	if(memory > 32){
+	if(memory >= 32){
 		maxMemory = memory;
 	}
 	else{
@@ -86,74 +86,55 @@ void Assembler::assemble(std::string filename){
     string line;
     ifstream reader(filename);
     
-    if (reader.is_open())
-    {
-        for (size_t i = 1; i <= 2; i++)
-        {
-            while (! reader.eof() )
-            {
-                
-                
-                
-                try
-                {
-                    getline (reader,line);
-                }
-                catch(const std::exception& e)
-                {
-                    cout << "200" << endl; 
-                }
-              
-
-                try
-                {
-                    if (i == 2 && out.getLineDone(instructionCounter) == false)
-                    {
-                        processLine(line, instructionCounter, i);
-                    }
-                    
-                }
-                catch(const std::exception& e)
-                {
-                    
-                    int errorCode = stoi(e.what());
-                    switch (errorCode)
-                    {
-                    case 100:
-                        cout << errorCode << endl;
-                        break;
-                    case 101:
-                        cout << errorCode << endl;
-                        break;
-                    case 102:
-                        cout << errorCode << endl;
-                        break;
-                    case 103:
-                        cout << errorCode << endl;
-                        break;
-                    case 104:
-                        cout << errorCode << endl;
-                        break;
-                    
-                    default:
-                        cout << errorCode << endl;
-                        break;
-                    }
-
-                    return;
-                }
-                
-
-            }
-            reader.clear();
-            reader.seekg(0);
-            instructionCounter = 0;
-        }
-        reader.close();
+	if (!reader) {
+        throw invalid_argument("202");
     }
-    else{
-        cout << "202" << endl;
-    }
+
+	for (int i = 1; i <= 2; i++)
+	{
+		while (getline(reader, line))
+		{
+			try
+			{
+				processLine(line, instructionCounter, i);
+				
+			}
+			catch(const std::invalid_argument& e)
+			{
+				int errorCode = stoi(e.what());
+				switch (errorCode)
+				{
+				case 100:
+					cout << errorCode << endl;
+					break;
+				case 101:
+					cout << errorCode << endl;
+					break;
+				case 102:
+					cout << errorCode << endl;
+					break;
+				case 103:
+					cout << errorCode << endl;
+					break;
+				case 104:
+					cout << errorCode << endl;
+					break;
+				
+				default:
+					cout << errorCode << endl;
+					break;
+				}
+
+				return;
+			}
+			
+
+		}
+		reader.clear();
+		reader.seekg(0);
+		instructionCounter = 0;
+	}
+	reader.close();
     
 
 }
@@ -163,30 +144,34 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
     {
         throw invalid_argument("104");
     }
-    
-    
-    string splitLine = strsplit(line, ";").at(0);
-    
+    string splitLine = "";
 
-    if (splitLine == "");
-    {
+    if(line.find(';') != std::string::npos){
+		splitLine = line.substr(0,line.find(';'));
+	}
+
+    if (splitLine == ""){
         return;
     }
-    
-    
+
+	if(out.getLineDone(counter) == true){
+		counter++;
+		return;
+	}
+
     vector<string> instruction = strsplit(splitLine, " ");
 
-    if(instruction[0].find(':')){
+    if(instruction[0].find(':') != std::string::npos){
         string label = instruction[0].substr(0,instruction[0].find(':'));
-        if (sym.searchLabel(label) != -1)
-        {
-            throw invalid_argument("100");
-
-        }
-        
-        sym.addLabel(label, binary::decimalToUnsignedBinary(counter, 12));
+        if(iteration == 1){
+			if (sym.searchLabel(label) != -1){
+				throw invalid_argument("100");
+			}
+			sym.addLabel(label, binary::decimalToUnsignedBinary(counter, 12));
+		}
 
         string opcode = instruction[1];
+		
         if (opcode == "VAR")
         {
             string operand = instruction[2];
@@ -201,6 +186,8 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
             }
             
             out.addLine(binary::decimalToSignedBinary(op, 32), true);
+			counter++;
+			return;
         }
         
         int opcodedecimal = getOpcode(opcode);
@@ -211,18 +198,27 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         
         string opcodeBinary =binary::decimalToUnsignedBinary(opcodedecimal, 7);
 
-        
+		// Handle no operand case
+        if(instruction.size() < 3){
+            string output = "0000000000000" + opcodeBinary + "000000000000";
+			out.addLine(output, true);
+			counter++;
+			return;
+		}
+
         string operand = instruction[2];
         int index = sym.searchLabel(operand);
         if (index == -1)
         {
             if (iteration == 1)
             {
+				if(label == "START"){cout << "s" << endl;}
                 out.addLine("", false);
+				counter++;
+				return;
             }
             else{
                 throw invalid_argument("103");
-
             }
             
         }
@@ -233,10 +229,14 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
             {
                 
                 out.addLine(output, true);
+				counter++;
+				return;
 
             }
             else{
                 out.setLine(output, true, counter);
+				counter++;
+				return;
 
             }
             
@@ -244,7 +244,7 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         
     }
     else{
-         string opcode = instruction[0];
+        string opcode = instruction[0];
         if (opcode == "VAR")
         {
             string operand = instruction[1];
@@ -259,6 +259,8 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
             }
             
             out.addLine(binary::decimalToSignedBinary(op, 32), true);
+			counter++;
+			return;
         }
         
         int opcodedecimal = getOpcode(opcode);
@@ -269,7 +271,14 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         
         string opcodeBinary =binary::decimalToUnsignedBinary(opcodedecimal, 7);
 
-        
+		// Handle no operand case
+        if(instruction.size() < 2){
+            string output = "0000000000000" + opcodeBinary + "000000000000";
+			out.addLine(output, true);
+			counter++;
+			return;
+		}
+
         string operand = instruction[1];
         int index = sym.searchLabel(operand);
         if (index == -1)
@@ -277,10 +286,11 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
             if (iteration == 1)
             {
                 out.addLine("", false);
+				counter++;
+				return;
             }
             else{
                 throw invalid_argument("103");
-
             }
             
         }
@@ -289,23 +299,28 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
             string output = address + "0" + opcodeBinary + "000000000000";
             if (iteration == 1)
             {
-                
                 out.addLine(output, true);
-
+				counter++;
+				return;
             }
             else{
                 out.setLine(output, true, counter);
-
+				counter++;
+				return;
             }
             
         }    
     }
-
-
-    
-    counter++;
 }
 
+void Assembler::exportToFile(string filename){
+	try{
+		out.saveToFile(filename);
+	}
+	catch(const exception &e){
+		cout << "203" << endl;
+	}
+}
 
 
 SymbolTable::SymbolTable(){
@@ -317,20 +332,19 @@ SymbolTable::~SymbolTable(){
 }
 
 void SymbolTable::addLabel(std::string label, std::string address){
-	
 	entry x;
 	x.label = label;
 	x.address = address;
 	table.push_back(x);
-
 }
 
 int SymbolTable::searchLabel(std::string label){
-
-	for (int i=0;i<table.size()-1;i++) {
-		if (table.at(i).label==label) {
+	int i = 0;
+	for (entry e : table) {
+		if (e.label == label) {
 			return i;
 		}
+		i++;
 	}
 	return -1;
 }
@@ -358,10 +372,13 @@ OutputBuffer::~OutputBuffer(){
  */
 
 bool OutputBuffer::getLineDone(int lineNumber){
-    //if line with this lineNumber is done
+    if(lineNumber >= buffer.size()){
+		return false;
+	}
     if (buffer.at(lineNumber).done) {
         return true;
-    } else {
+    } 
+	else {
         return false;
     }
 }
@@ -396,4 +413,23 @@ void OutputBuffer::setLine(std::string output, bool done, int lineNumber){
         buffer.at(lineNumber).output = output;
         buffer.at(lineNumber).done = done;
     }
+}
+
+void OutputBuffer::saveToFile(string filename){
+    ofstream out;
+    out.open(filename);
+
+    // Throw exception if file creation was not possible
+    if(!out){
+        throw runtime_error("203");
+    }
+
+    for(entry e : buffer){
+        out << e.output << endl;
+    }
+
+    // Close output stream
+    out.close();
+
+    return;
 }
