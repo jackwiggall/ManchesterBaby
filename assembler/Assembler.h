@@ -71,6 +71,7 @@ class SymbolTable{
 class OutputBuffer{
     struct entry {
         std::string output;
+        int lineNumber;
         bool done;
     };
 
