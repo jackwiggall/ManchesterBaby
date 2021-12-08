@@ -15,6 +15,7 @@
 #include <string>
 #include <cmath>
 #include <fstream>
+#include <ctime>
 #include "../binary_library/binary.h"
 using namespace std;
 
@@ -113,6 +114,10 @@ class Simulator {
          */
         void display();
 
+        /**
+         * @brief Store the current memory and register values in a text file
+         */
+        void saveToFile();
 };
 
 // End of header guard
