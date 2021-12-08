@@ -15,7 +15,10 @@ FLAGS = -std=c++17 -Wall -Wextra -pedantic -g
 
 # This target compiles the entire program
 all: main.o Simulator.o binary.o helpers.o
-	$(CC) $(FLAGS) main.o Simulator.o binary.o helpers.o -o outfile
+	$(CC) $(FLAGS) main.o Simulator.o binary.o helpers.o -o Simulator.out
+
+exec: all
+	-@rm *.o 2>/dev/null || true
 
 # main.o target compiles the main source code into object code
 main.o: main.cpp 
@@ -35,4 +38,4 @@ binary.o: ../binary_library/binary.cpp ../binary_library/binary.h
 
 # This target clears every outfiles and object code files
 clean:
-	-@rm *.o outfile 2>/dev/null || true
+	-@rm *.o Simulator.out 2>/dev/null || true

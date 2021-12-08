@@ -190,6 +190,28 @@ void Simulator::run() {
             display();
             helpers::waitForInput();
         }
+
+        // Prompt user about fetch-execute explanations
+        cout << FCYN("\n[SAVE] ") << "Would you like to save the output to a text file? [y/n]" << endl;
+        string saveChoice;
+        cin >> saveChoice;
+
+        // Clear the input buffer to remove any pending tokens
+        cin.ignore(1000, '\n');
+
+        // Validate input and toggle info mode
+        if (saveChoice == "y") {
+            try{
+                saveToFile();
+            }
+            catch(const exception &e){
+                cout << FCYN("\n[SAVE] ") << "An error occured. The file was not saved..." << endl;
+            }
+        } 
+        else {
+            cout << FCYN("\n[SAVE] ") << "Not saving..." << endl;
+        } 
+        helpers::waitForInput();
     }
     // If the Simulator was not initiated correcly, send error
     else{
@@ -270,7 +292,7 @@ void Simulator::decodeAndExecute() {
         int bits = ceil(log(memsize)/log(2));
         
         // Get operand address and convert into decimal
-        address = instruction.substr(0,bits-1);
+        address = instruction.substr(0,bits);
         addr = binary::unsignedBinaryToDecimal(address);
 
         // Fetch operand from store
@@ -528,3 +550,58 @@ void Simulator::display() {
     }
 }
 
+/**
+ * @brief Store the current memory and register values in a text file
+ */
+void Simulator::saveToFile(){
+    time_t timeObject;
+    struct tm * timeStruct;
+
+    time(&timeObject);
+    timeStruct = localtime(&timeObject);
+
+    char* timeString;
+    timeString = new char[80];
+    strftime(timeString, 100, "%d-%m-%y--%H-%M-%S", timeStruct);
+
+    string filename(timeString);
+    delete timeString;
+    filename = "output-" + filename + ".txt";
+
+    string directory = "./output/";
+
+    // Check if file already exists
+    ifstream in;
+    in.open(directory+filename);
+    if(in){
+        throw invalid_argument("File already exists");
+    }
+
+    // Attempt to create new file to write into
+    in.close();
+    ofstream out;
+    out.open(directory+filename);
+    // Throw exception if file creation was not possible
+    if(!out){
+        throw runtime_error("File creation failed");
+    }
+
+    out << "*** Simulator output from " << filename.substr(7) << " ***" << endl << endl;
+
+    out << "[REGISTERS]" << endl << endl;
+    out << "* CI\t" << binary::decimalToUnsignedBinary(ci, 32) << endl;
+    out << "* PI\t" << pi << endl;
+    out << "* ACM\t" << acc << endl << endl;
+
+    out << "[Memory]" << endl << endl;
+    for(int i=0; i < memsize; i++){
+        out << "* Line " << i << "\t" << store.at(i) << endl;
+    }
+
+    // Close output stream
+    out.close();
+
+    cout << FCYN("\n[SAVE] ") << "Saved to " << directory << filename << "." << endl;
+
+    return;
+}
