@@ -79,8 +79,25 @@ int main(){
 
         if(input == 1){
             Simulator s;
-            s.setup();
-            s.run();
+            try{
+                s.setup();
+                s.run();
+            }
+            catch(const exception &e){
+                // Clear the screen
+                helpers::clearScreen();
+
+                // Print large font
+                cout << BOLD(FRED("\n█▀█ █▀█ █▀█ █▀     █▀ █▀█ █▀▄▀█ █▀▀ ▀█▀ █ █ █ █▄ █ █▀▀   █ █ █ █▀▀ █▄ █ ▀█▀   █ █ █ █▀█ █▀█ █▄ █ █▀▀   ▀ ▄▀")) << endl;
+                cout <<   BOLD(FRED("█▄█ █▄█ █▀▀ ▄█ █   ▄█ █▄█ █ ▀ █ ██▄  █  █▀█ █ █ ▀█ █▄█   ▀▄▀▄▀ ██▄ █ ▀█  █    ▀▄▀▄▀ █▀▄ █▄█ █ ▀█ █▄█   ▄ ▀▄\n")) << endl << endl;
+                
+                // Print error message
+                cout << "The Simulator suffered a fatal error: " << endl;
+                cout << e.what() << endl;
+
+                // Press enter to continue
+                helpers::waitForInput();
+            }
         }
         else if(input == 0){
             quit = true;

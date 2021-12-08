@@ -142,7 +142,7 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
     {
         throw invalid_argument("104");
     }
-    string splitLine = "";
+    string splitLine = line;
 
     if(line.find(';') != std::string::npos){
 		splitLine = line.substr(0,line.find(';'));
