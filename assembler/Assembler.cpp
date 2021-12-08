@@ -83,21 +83,9 @@ bool OutputBuffer::getLineDone(int lineNumber){
 void OutputBuffer::addLine(std::string output, bool done){
     entry x;
 
-    //setting the lineNumber
-    int line;
-    line = buffer.back().lineNumber;
-    line += 1;
-
     //add to entry
-    x.lineNumber = line;
     x.output = output;
-
-    //if output is empty, not done
-    if (output == "") {
-        x.done = false;
-    } else {
-        x.done = true;
-    }
+	x.done = done;
 
 	buffer.push_back(x);
 }
@@ -113,6 +101,6 @@ void OutputBuffer::setLine(std::string output, bool done, int lineNumber){
     //if line is not done set values
     if (getLineDone(lineNumber) == false) {
         buffer.at(lineNumber).output = output;
-        buffer.at(lineNumber).done = true;
+        buffer.at(lineNumber).done = done;
     }
 }
