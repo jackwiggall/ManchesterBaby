@@ -32,7 +32,7 @@ SymbolTable::SymbolTable(){
 }
 
 SymbolTable::~SymbolTable(){
-	delete [] table; //delete dis
+	//empty destructor
 }
 
 void SymbolTable::addLabel(std::string label, std::string address){
@@ -40,7 +40,7 @@ void SymbolTable::addLabel(std::string label, std::string address){
 	entry x;
 	x.label = label;
 	x.address = address;
-	table.push(x);
+	table.push_back(x);
 
 }
 
