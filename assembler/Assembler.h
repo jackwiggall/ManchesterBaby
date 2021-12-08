@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 #include "../binary_library/binary.h"
 #include <fstream>
 #include <iostream>
@@ -22,10 +23,10 @@ class Assembler{
         std::vector<instruction> instructionSet;
 
     public:
-        Assembler();
+        Assembler(int memory);
         ~Assembler();
 
-        void loadInstructionSet(std::string filename);
+        bool loadInstructionSet(std::string filename);
         int getOpcode(std::string mneumonic);
 
         void assemble(std::string filename);
