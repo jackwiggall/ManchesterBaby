@@ -88,7 +88,7 @@ class Assembler{
         bool loadInstructionSet(std::string filename);
         int getOpcode(std::string mneumonic);
 
-        void assemble(std::string filename);
+        bool assemble(std::string filename);
         void processLine(std::string line, int &counter, int iteration);
 
         void exportToFile(std::string filename);

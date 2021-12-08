@@ -52,11 +52,10 @@ bool Assembler::loadInstructionSet(std::string filename){
     
     // Return failed if file could not be read
     if (!reader) {
-        throw invalid_argument("201");
+        cout << "201" << endl;
+        return false;
     }
 
-    // Declare line counter
-    int i = 0;
     // Loop through lines of file
     while(getline(reader, line)) {
 		vector<string> token = strsplit(line,",");
@@ -80,7 +79,7 @@ int Assembler::getOpcode(std::string mneumonic){
     return -1;
 }
 
-void Assembler::assemble(std::string filename){
+bool Assembler::assemble(std::string filename){
     int instructionCounter = 0;
     int lineCounter = 0;
     string line;
@@ -125,7 +124,7 @@ void Assembler::assemble(std::string filename){
 					break;
 				}
 
-				return;
+				return false;
 			}
 			
 
@@ -135,8 +134,7 @@ void Assembler::assemble(std::string filename){
 		instructionCounter = 0;
 	}
 	reader.close();
-    
-
+    return true;
 }
 
 void Assembler::processLine(std::string line, int &counter, int iteration){
@@ -212,7 +210,6 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         {
             if (iteration == 1)
             {
-				if(label == "START"){cout << "s" << endl;}
                 out.addLine("", false);
 				counter++;
 				return;
@@ -372,7 +369,7 @@ OutputBuffer::~OutputBuffer(){
  */
 
 bool OutputBuffer::getLineDone(int lineNumber){
-    if(lineNumber >= buffer.size()){
+    if(lineNumber >= (int) buffer.size()){
 		return false;
 	}
     if (buffer.at(lineNumber).done) {
@@ -417,7 +414,7 @@ void OutputBuffer::setLine(std::string output, bool done, int lineNumber){
 
 void OutputBuffer::saveToFile(string filename){
     ofstream out;
-    out.open(filename);
+    out.open("./output/"+filename);
 
     // Throw exception if file creation was not possible
     if(!out){
