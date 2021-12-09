@@ -1,0 +1,13 @@
+; THIS PROGRAM TESTS THE EXTENDED INSTRUCTION SET
+; The program starts at address 1, so we need to pad out address 0 
+            VAR 0       ; Declare 32-bit variable to fill space 
+START:      LDP NUM1    ; Loads a number into the accumulator (A=10)
+            INC         ; Increments accumulator by 1 (A=11)
+            MTP NUM2    ; Multiplies accumulator with NUM2 (A=22)
+            MIN NUM2    ; Accumulator becomes minimum of A and NUM2 (A=2)
+            MAX NUM1    ; Accumulator becomes maximum of A and NUM1 (A=10)
+            ADD NUM2    ; Adds accumulator and NUM2 (A=12)
+END:        STP
+
+NUM1:       VAR 10
+NUM2:       VAR 2

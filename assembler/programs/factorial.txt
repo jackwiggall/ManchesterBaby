@@ -1,0 +1,32 @@
+; [!] This program requires the extended instruction set provided
+
+; This program calculates the nth factorial, where n is given by the variable MAX
+
+; The program starts at address 1, so we need to pad out address 0 
+            VAR 0
+START:      JMP LOOP_A
+
+; Check if CURRENT is greater than MAX
+LOOP_A:     VAR 0
+            LDP MAX     ; Load CURRENT 
+            SUB CURRENT ; Subtract MAX 
+            CMP         ; If negative, skip to END
+            JMP LOOP_B  ; If positive, skip tp LOOP_B
+
+; Halt the program
+END:        STP
+
+; Calculate next factorial step
+LOOP_B:     VAR 0
+            LDP FACT
+            MTP CURRENT
+            STO FACT
+            LDP CURRENT
+            INC
+            STO CURRENT
+            JMP LOOP_A
+
+; Variable declarations 
+CURRENT:    VAR 1
+MAX:        VAR 5
+FACT:       VAR 1
