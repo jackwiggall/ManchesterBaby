@@ -2,7 +2,7 @@
  * @file Assmbler.h
  * @authors [Group 1] Elliot Scott (2413916), Ross Coombs (2410466), Heather Currie (2411616), Jack Wiggall (2413924), Kai Uerlichs (2421101)
  *
- * @brief The header file for the Assemler class
+ * @brief The header file for the Assembler class
  */
 
 // Header guard

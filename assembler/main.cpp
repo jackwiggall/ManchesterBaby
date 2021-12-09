@@ -32,7 +32,7 @@ string getUserInput(string prompt){
  * @param prompt Message to display
  */
 void printMessage(string message){
-    cout << FMAG("[Setup] ") << message << endl;
+    cout << FMAG("[Assembler] ") << message << endl;
     cout << endl;
 }
 
@@ -67,7 +67,7 @@ void startAssembly(){
         printMessage("Setting memory size to 32 lines...");
     }
 
-    string verboseIn = getUserInput("Do you want to turn on verbose more? [y/N]");
+    string verboseIn = getUserInput("Do you want to turn on verbose mode? [y/N]");
     bool verbose = false;
     if(!verboseIn.empty()){
         if(verboseIn.front() == 'y' || verboseIn.front() == 'Y'){
