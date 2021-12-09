@@ -27,9 +27,14 @@ vector<string> Assembler::strsplit(const string& str, const string& delim)
     return tokens;
 }
 
-Assembler::Assembler(int memory){
+Assembler::Assembler(int memory, bool verbose){
 	if(memory >= 32){
 		maxMemory = memory;
+        if (verbose)
+        {
+            cout << "memory size is"<< memory<<endl;
+        }
+        
 	}
 	else{
 		cout << "204" << endl;
@@ -63,6 +68,10 @@ bool Assembler::loadInstructionSet(std::string filename){
         opcode = stoi(token[1]); //get opcode
         instruction.opcode = opcode; //convert opcode to int
         instructionSet.push_back(instruction); //add to set
+        if (verbose)
+        {
+            cout << "gets line: "<< line<<"from file"<<endl;
+        }
     }
     return true;
 }
@@ -72,7 +81,13 @@ int Assembler::getOpcode(std::string mneumonic){
     for (size_t i = 0; i < instructionSet.size(); i++) {
         //if matches return opcode
         if(instructionSet.at(i).mneumonic == mneumonic) {
+
+            if (verbose)
+            {
+                cout << "opcode is: "<< instructionSet.at(i).opcode<<endl;
+            }
             return instructionSet.at(i).opcode;
+            
         }
     }
     //if not found return -1
@@ -126,7 +141,10 @@ bool Assembler::assemble(std::string filename){
 
 				return false;
 			}
-			
+			if (verbose)
+            {
+                 cout << "gets line: "<< line<<"from file"<<endl;
+            }
 
 		}
 		reader.clear();
@@ -184,6 +202,7 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
             }
             
             out.addLine(binary::decimalToSignedBinary(op, 32), true);
+           
 			counter++;
 			return;
         }
@@ -195,7 +214,10 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         }
         
         string opcodeBinary =binary::decimalToUnsignedBinary(opcodedecimal, 7);
-
+        if (verbose)
+        {
+            cout << "binary opcode: "<<opcodeBinary <<endl;
+        }
 		// Handle no operand case
         if(instruction.size() < 3){
             string output = "0000000000000" + opcodeBinary + "000000000000";
@@ -222,6 +244,10 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         else{
             string address = sym.getAddress(index);
             string output = address + "0" + opcodeBinary + "000000000000";
+            if (verbose)
+            {
+                cout << "output is: "<<output <<endl;
+            }
             if (iteration == 1)
             {
                 
@@ -267,7 +293,10 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         }
         
         string opcodeBinary =binary::decimalToUnsignedBinary(opcodedecimal, 7);
-
+         if (verbose)
+        {
+            cout << "binary opcode: "<<opcodeBinary <<endl;
+        }
 		// Handle no operand case
         if(instruction.size() < 2){
             string output = "0000000000000" + opcodeBinary + "000000000000";
@@ -294,6 +323,10 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         else{
             string address = sym.getAddress(index);
             string output = address + "0" + opcodeBinary + "000000000000";
+             if (verbose)
+            {
+                cout << "output is: "<<output <<endl;
+            }
             if (iteration == 1)
             {
                 out.addLine(output, true);
@@ -313,6 +346,10 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
 void Assembler::exportToFile(string filename){
 	try{
 		out.saveToFile(filename);
+         if (verbose)
+        {
+            cout << "saving to file"<<endl;
+        }
 	}
 	catch(const exception &e){
 		cout << "203" << endl;
@@ -415,6 +452,7 @@ void OutputBuffer::setLine(std::string output, bool done, int lineNumber){
 void OutputBuffer::saveToFile(string filename){
     ofstream out;
     out.open("./output/"+filename);
+  
 
     // Throw exception if file creation was not possible
     if(!out){

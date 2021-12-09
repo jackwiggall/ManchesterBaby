@@ -76,13 +76,17 @@ class Assembler{
         int currentLine = 0;
         int maxMemory = 32;
 
+        bool verbose;
+
+
+
         SymbolTable sym;
         OutputBuffer out;
 
         std::vector<instruction> instructionSet;
 
     public:
-        Assembler(int memory);
+        Assembler(int memory, bool verbose);
         ~Assembler();
 
         bool loadInstructionSet(std::string filename);
