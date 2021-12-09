@@ -104,23 +104,23 @@ bool Assembler::assemble(std::string filename){
 				switch (errorCode)
 				{
 				case 100:
-					cout << errorCode << endl;
+					cout << FRED("Error ") << errorCode << FRED(" on line ") << lineCounter << FRED(". Label is already defined elsewhere.") << endl;
 					break;
 				case 101:
-					cout << errorCode << endl;
+					cout << FRED("Error ") << errorCode << FRED(" on line ") << lineCounter << FRED(". Value is not a signed 32-bit integer.") << endl;
 					break;
 				case 102:
-					cout << errorCode << endl;
+					cout << FRED("Error ") << errorCode << FRED(" on line ") << lineCounter << FRED(". Operand not in instruction set.") << endl;
 					break;
 				case 103:
-					cout << errorCode << endl;
+					cout << FRED("Error ") << errorCode << FRED(" on line ") << lineCounter << FRED(". Label does not exist.") << endl;
 					break;
 				case 104:
-					cout << errorCode << endl;
+					cout << FRED("Error ") << errorCode << FRED(" on line ") << lineCounter << FRED(". Machine code exceeds memory size.") << endl;
 					break;
 				
 				default:
-					cout << errorCode << endl;
+					cout << FRED("Error ") << errorCode << FRED(" on line ") << lineCounter << FRED(". Unknown Error.") << endl;
 					break;
 				}
 
