@@ -71,7 +71,7 @@ After filling in the required information, you have the option to activate verbo
 
     100    Label is already defined elsewhere
     101    Value is not a signed 32-bit integer
-    102    Operand not in instruction set
+    102    Instruction not in instruction set
     103    Label does not exist
     104    Machine code exceeds memory size
 
