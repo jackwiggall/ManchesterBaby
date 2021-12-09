@@ -32,7 +32,7 @@ Assembler::Assembler(int memory){
 		maxMemory = memory;
 	}
 	else{
-		throw invalid_argument("001");
+		cout << "204" << endl;
 	}
   
 }
