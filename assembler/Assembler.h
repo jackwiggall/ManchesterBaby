@@ -15,7 +15,7 @@ class SymbolTable{
     };
 
     private:
-        std::vector<entry> table;
+        std::vector<entry> table; //table of labels and addresses
 
     public:
         SymbolTable();
