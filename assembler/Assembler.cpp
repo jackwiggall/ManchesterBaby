@@ -27,6 +27,11 @@ vector<string> Assembler::strsplit(const string& str, const string& delim)
     return tokens; //returns string vector split
 }
 
+/**
+ * @brief constucts a new assembler object
+ * 
+ * @param memory checks if memory is greater than or equal to 32
+ */ 
 Assembler::Assembler(int memory){
 	if(memory >= 32){ //check if enough memory exists or error
 		maxMemory = memory;
@@ -37,10 +42,19 @@ Assembler::Assembler(int memory){
   
 }
 
+/**
+ * @brief deconstucts assembler object
+ */ 
 Assembler::~Assembler(){
     //deconstructor
 }
 
+/**
+ * @brief loads the instuction set
+ * 
+ * @param filename name of file which the instruction set is being loaded from
+ * @return if the file was read successfully
+ */
 bool Assembler::loadInstructionSet(std::string filename){
     // Declare local variables
     string line;
@@ -67,6 +81,12 @@ bool Assembler::loadInstructionSet(std::string filename){
     return true;
 }
 
+/**
+ * @brief gets the operation code
+ * 
+ * @param mneumonic used to specify the operation code
+ * @return opcode or -1 if it is not found
+ */ 
 int Assembler::getOpcode(std::string mneumonic){
     //loop through set
     for (size_t i = 0; i < instructionSet.size(); i++) {
@@ -79,6 +99,12 @@ int Assembler::getOpcode(std::string mneumonic){
     return -1;
 }
 
+/**
+ * @brief runs the assembler
+ * 
+ * @param filename the file which is to be read in
+ * @returns if the function was successful
+ */ 
 bool Assembler::assemble(std::string filename){
     int instructionCounter = 0; //counter for the current instruction
     int lineCounter = 0; //counter for the current line
@@ -137,6 +163,13 @@ bool Assembler::assemble(std::string filename){
     return true;
 }
 
+/**
+ * @brief processes each line which is to be assembled
+ * 
+ * @param line that is being assembled
+ * @param counter of which instuction it is processing
+ * @param iteration of which line it is on
+ */
 void Assembler::processLine(std::string line, int &counter, int iteration){
     if (counter >= maxMemory) //checks if exceeding memory
     {
@@ -313,6 +346,11 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
     }
 }
 
+/**
+ * @brief calls save to file if possible
+ * 
+ * @param filename the name of the file it is writing to
+ */
 void Assembler::exportToFile(string filename){
 	//saves to file or gives error
     try{
@@ -323,15 +361,26 @@ void Assembler::exportToFile(string filename){
 	}
 }
 
-
+/**
+ * @brief Constucts a new symbol table object
+ */
 SymbolTable::SymbolTable(){
 	//empty constructor
 }
 
+/**
+ * @brief Destructs symbol table object
+ */ 
 SymbolTable::~SymbolTable(){
 	//empty destructor
 }
 
+/**
+ * @brief Adds a new label into the table
+ * 
+ * @param label The label to add
+ * @param address The address the label represents
+ */
 void SymbolTable::addLabel(std::string label, std::string address){
 	entry x;
 	x.label = label;
@@ -339,6 +388,12 @@ void SymbolTable::addLabel(std::string label, std::string address){
 	table.push_back(x);
 }
 
+/**
+ * @brief Searches for a label in the symbol table and returns its index
+ * 
+ * @param label The label to search for
+ * @return int the index of the label in the vector, or -1 if not found
+ */
 int SymbolTable::searchLabel(std::string label){
 	//searches for the label or returns -1
     int i = 0;
@@ -351,17 +406,28 @@ int SymbolTable::searchLabel(std::string label){
 	return -1;
 }
 
+/**
+ * @brief Returns the address of the label at index
+ * 
+ * @param index The index to lookup
+ * @return std::string The address
+ */
 string SymbolTable::getAddress(int index){
     //returns the address at the given index in the table
 	return table.at(index).address;
 }
 
 
-
+/**
+ * @brief Constucts a new output buffer
+ */
 OutputBuffer::OutputBuffer(){
     //empty constructor
 }
 
+/**
+ * @brief Destructs output buffer object
+ */ 
 OutputBuffer::~OutputBuffer(){
     //empty deconstructor
 }
@@ -417,6 +483,11 @@ void OutputBuffer::setLine(std::string output, bool done, int lineNumber){
     }
 }
 
+/**
+ * @brief saves the output to a textfile
+ * 
+ * @param filename the name of the output file
+ */
 void OutputBuffer::saveToFile(string filename){
     ofstream out;
     out.open("./output/"+filename);

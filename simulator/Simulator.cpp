@@ -281,13 +281,13 @@ void Simulator::decodeAndExecute() {
     string instruction = pi;
 
     // Retrieve opcode
-    string opcode = instruction.substr(13,3);
+    string opcode = instruction.substr(13,7);
 
-    // Do not fetch operand for CMP and STP instructions, as they are not required
+    // Do not fetch operand for CMP, STP, or INC instructions, as they are not required
     string address = "";
     string operand = "";
     int addr;
-    if(opcode != "011" && opcode != "111"){
+    if(opcode != "011000000" && opcode != "111000000" && opcode != "1011000"){
         // Calculate operand address length based on memory size
         int bits = ceil(log(memsize)/log(2));
         
@@ -302,7 +302,7 @@ void Simulator::decodeAndExecute() {
     // Display cycle information
     if(info){
         string opcodeMneumonic = "";
-        cout << endl << FCYN("* ") << "Now we have to decode the instruction. We can work out the opcode by looking at bits 13-15, and" << endl;
+        cout << endl << FCYN("* ") << "Now we have to decode the instruction. We can work out the opcode by looking at bits 13-20 (extended), and" << endl;
         cout << FCYN("* ") << "the operand address by looking at a number of bits at the beginning of the instruction (depending" << endl;
         cout << FCYN("* ") << "on the amount of memory declared in the Simulator. The CMP and HLT instructions have no operands." << endl;
 
@@ -315,7 +315,13 @@ void Simulator::decodeAndExecute() {
         case 4: opcodeMneumonic = "SUB"; break;
         case 5: opcodeMneumonic = "SUB"; break;
         case 6: opcodeMneumonic = "CMP"; break;
-        case 7: opcodeMneumonic = "HLT"; break;
+        case 7: opcodeMneumonic = "STP"; break;
+        case 8: opcodeMneumonic = "ADD"; break;
+        case 9: opcodeMneumonic = "MTP"; break;
+        case 10: opcodeMneumonic = "MIN"; break;
+        case 11: opcodeMneumonic = "MAX"; break;
+        case 12: opcodeMneumonic = "LDP"; break;
+        case 13: opcodeMneumonic = "INC"; break;
         }
 
         cout << FCYN("* ") << "Opcode:\t\t$" << opcode << "\t" << opcodeDec << "\t" << opcodeMneumonic << endl;
@@ -338,7 +344,7 @@ void Simulator::decodeAndExecute() {
     // Check opcodes in string representation to avoid unnecessary calculations
 
     // Jump to a memory location specified by the value at memory location specified by operand
-    if(opcode == "000" /* 0 JMP */){
+    if(opcode == "0000000" /* 0 JMP */){
          // Display cycle information
         if(info){
             cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was JMP, we know we need to execute a jump instruction. " << endl;
@@ -352,7 +358,7 @@ void Simulator::decodeAndExecute() {
     }
 
     // Jump Relative by adding the value at memoroy location specified by operand to CI
-    if(opcode == "100" /* 1 JRP */){
+    if(opcode == "1000000" /* 1 JRP */){
         // Display cycle information
         if(info){
             cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was JRP, we know we need to execute a relative jump. " << endl;
@@ -366,8 +372,8 @@ void Simulator::decodeAndExecute() {
         return;
     }
 
-    // Load negative of value at memoroy location specified by operand into accumulator
-    if(opcode == "010" /* 2 LDN */){
+    // Load negative of value at memory location specified by operand into accumulator
+    if(opcode == "0100000" /* 2 LDN */){
         // Display cycle information
         if(info){
             cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was LDN, we know we need to execute a Load Negative instruction. " << endl;
@@ -381,7 +387,7 @@ void Simulator::decodeAndExecute() {
     }
 
     // Store value in accumulator into memory location specified by operand
-    if(opcode == "110" /* 3 STO */){
+    if(opcode == "1100000" /* 3 STO */){
         // Display cycle information
         if(info){
             cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was STO, we know we need to execute a Store instruction. " << endl;
@@ -394,8 +400,8 @@ void Simulator::decodeAndExecute() {
         return;
     }
 
-    // Subtract value at memoroy location specified by operand from accumulator and store result in accumulator
-    if(opcode == "001" || opcode == "101" /* 4,5 SUB */){
+    // Subtract value at memory location specified by operand from accumulator and store result in accumulator
+    if(opcode == "0010000" || opcode == "101" /* 4,5 SUB */){
         // Display cycle information
         if(info){
             cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was SUB, we know we need to execute a subtraction. " << endl;
@@ -409,7 +415,7 @@ void Simulator::decodeAndExecute() {
     }
 
     // If value in accumulator is less than zero, increment CI by one
-    if(opcode == "011" /* 6 CMP */){
+    if(opcode == "0110000" /* 6 CMP */){
         // Display cycle information
         if(info){
             cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was CMP, we know we need to execute a compare instruction. " << endl;
@@ -425,15 +431,104 @@ void Simulator::decodeAndExecute() {
     }
 
     // Halt the program
-    if(opcode == "111" /* 7 STP */){
+    if(opcode == "1110000" /* 7 STP */){
         // Display cycle information
         if(info){
-            cout << endl << FCYN("* ") << "We now reached the execution stage. We have encountered the HLT instruction. The program now terminates. " << endl;
+            cout << endl << FCYN("* ") << "We now reached the execution stage. We have encountered the STP instruction. The program now terminates. " << endl;
 
             helpers::waitForInput();
         }
         
         done = true;
+        return;
+    }
+
+    // Add value at memory location specified by operand to the value currently in the accumulator, and store it in the accumulator
+    if(opcode == "0001000" /* 8 ADD */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. We have encountered an ADD instruction. " << endl;
+            cout << FCYN("* ") << "This means, we add the operand value to the accumulator, and store the result in the accumulator." << endl;
+            helpers::waitForInput();
+        }
+
+        acc = binary::binaryAdd(acc, operand);
+        return;
+    }
+
+    // Mulitply value at memory location specified by operand by the value currently in the accumulator, and store it in the accumulator
+    if(opcode == "1001000" /* 9 Mulitply */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. We have encountered a MTP instruction." << endl;
+            cout << FCYN("* ") << "This means, we multiply the operand value by the accumulator, and store the result in the accumulator." << endl;
+            helpers::waitForInput();
+        }
+        int a = binary::signedBinaryToDecimal(acc);
+        int b = binary::signedBinaryToDecimal(operand);
+        int c = a*b;
+
+        acc = binary::decimalToSignedBinary(c,32);
+        return;
+    }
+
+    // Compare value at memory location specified by operand with the value currently in the accumulator, and store the lower in the accumulator
+    if(opcode == "0101000" /* 10 MIN */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. We have encountered a MIN instruction." << endl;
+            cout << FCYN("* ") << "This means, we compare operand value with the accumulator, and store the lower in the accumulator." << endl;
+            helpers::waitForInput();
+        }
+        int a = binary::signedBinaryToDecimal(acc);
+        int b = binary::signedBinaryToDecimal(operand);
+        int c = min(a,b);
+
+        acc = binary::decimalToSignedBinary(c,32);
+        return;
+    }
+
+    // Compare value at memory location specified by operand with the value currently in the accumulator, and store the higher in the accumulator
+    if(opcode == "1101000" /* 11 MAX */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. We have encountered a MAX instruction." << endl;
+            cout << FCYN("* ") << "This means, we compare operand value with the accumulator, and store the higher in the accumulator." << endl;
+            helpers::waitForInput();
+        }
+        int a = binary::signedBinaryToDecimal(acc);
+        int b = binary::signedBinaryToDecimal(operand);
+        int c = max(a,b);
+
+        acc = binary::decimalToSignedBinary(c,32);
+        return;
+    }
+
+    // Load positive of value at memory location specified by operand into accumulator
+    if(opcode == "0011000" /* 12 LDP */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was LDP, we know we need to execute a Load Positive instruction. " << endl;
+            cout << FCYN("* ") << "This means, we load the current operand value into the accumulator." << endl;
+
+            helpers::waitForInput();
+        }
+
+        acc = operand;
+        return;
+    }
+
+    // Increments the accumulator by 1
+    if(opcode == "1011000" /* 13 INC */){
+        // Display cycle information
+        if(info){
+            cout << endl << FCYN("* ") << "We now reached the execution stage. As the opcode was INC, we know we need to increment the accumulator. " << endl;
+            cout << FCYN("* ") << "This means, simply increase the accumulator value by 1." << endl;
+
+            helpers::waitForInput();
+        }
+
+        acc = binary::binaryAdd(acc,"1");
         return;
     }
 }
