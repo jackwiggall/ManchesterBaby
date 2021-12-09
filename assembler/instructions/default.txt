@@ -3,5 +3,5 @@ JRP,1
 LDN,2
 STO,3
 SUB,4
-CMO,6
+CMP,6
 STP,7

@@ -347,7 +347,7 @@ void Simulator::decodeAndExecute() {
             helpers::waitForInput();
         }
 
-        ci = binary::unsignedBinaryToDecimal(operand);
+        ci = binary::unsignedBinaryToDecimal(address);
         return;
     }
 
@@ -362,7 +362,7 @@ void Simulator::decodeAndExecute() {
             helpers::waitForInput();
         }
 
-        ci += binary::unsignedBinaryToDecimal(operand);
+        ci += binary::unsignedBinaryToDecimal(address);
         return;
     }
 

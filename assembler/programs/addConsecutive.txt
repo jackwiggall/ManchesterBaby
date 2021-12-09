@@ -1,0 +1,30 @@
+; THIS PROGRAM ADDS CONSECUTIVE NUMBERS UNTIL MAX (10)
+; The program starts at address 1, so we need to pad out address 0 
+            VAR 0       ; Top padding
+START:      LDN MAX     ; Negate the max value for easier arithmetic
+            STO MAX       
+            JMP LOOP_A  ; Jump to LOOP_B
+LOOP_A:     VAR 0       ; Padding for CI increment
+            LDN CURRENT ; Load current (negate)
+            SUB MAX     ; Subtract max (negation)
+            CMP         ; If negative, skip to END
+            JMP LOOP_B  ; If positive, skip tp LOOP_B
+END:        STP         ; Halt the program
+LOOP_B:     VAR 0       ; Padding for CI increment
+            LDN SUM     ; Load sum (negate)
+            SUB CURRENT ; Subtract current (therefore get the negation of the sum)
+            STO SUM     ; Store result in sum
+            LDN SUM     ; Negate the sum to get the correct sign
+            STO SUM     
+            LDN CURRENT ; Load current (negate) 
+            SUB ONE     ; Subtract one (therefore getting negation of the sum)
+            STO CURRENT ; Store result in current
+            LDN CURRENT ; Negate current to get the correct sign
+            STO CURRENT 
+            JMP LOOP_A  ; Jump to LOOP_A
+ONE:        VAR 1       ; Set ONE to 1
+CURRENT:    VAR 1       ; Set CURRENT to 1
+MAX:        VAR 10      ; Set MAX to 10 (end result in SUM should be 55)
+            VAR 0       ;
+            VAR 0       
+SUM:        VAR 0       ; Set SUM to 0
