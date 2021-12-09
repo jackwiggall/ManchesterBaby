@@ -1,6 +1,15 @@
+/**
+ * @file Assmbler.h
+ * @authors [Group 1] Elliot Scott (2413916), Ross Coombs (2410466), Heather Currie (2411616), Jack Wiggall (2413924), Kai Uerlichs (2421101)
+ *
+ * @brief The header file for the Assemler class
+ */
+
+// Header guard
 #ifndef ASSEMBLER_H
 #define ASSEMBLER_H
 
+// Necessary includes
 #include <string>
 #include <vector>
 #include <fstream>
@@ -8,6 +17,9 @@
 #include "../binary_library/binary.h"
 #include "Colors.h"
 
+/**
+ * @brief This class represents the symbol table of an assembler
+ */
 class SymbolTable{
     struct entry {
         /**
@@ -68,6 +80,9 @@ class SymbolTable{
 
 };
 
+/**
+ * @brief This class represents the output buffer of an assembler 
+ */
 class OutputBuffer{
     struct entry {
         /**
@@ -138,6 +153,9 @@ class OutputBuffer{
         void saveToFile(std::string filename);
 };
 
+/**
+ * @brief This class contains the main assembler functionality and structures 
+ */
 class Assembler{
     struct instruction{
         /**
@@ -243,4 +261,5 @@ class Assembler{
         std::vector<std::string> strsplit(const std::string& str, const std::string& delim);
 };
 
+// End of header guard
 #endif
