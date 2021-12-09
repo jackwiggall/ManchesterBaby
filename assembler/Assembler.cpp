@@ -15,16 +15,16 @@ vector<string> Assembler::strsplit(const string& str, const string& delim)
 {
     vector<string> tokens;
     size_t prev = 0, pos = 0;
-    do
+    do //loops for the length of the string getting split
     {
-        pos = str.find(delim, prev);
-        if (pos == string::npos) pos = str.length();
-        string token = str.substr(prev, pos-prev);
-        if (!token.empty()) tokens.push_back(token);
+        pos = str.find(delim, prev); //gets the start of the string
+        if (pos == string::npos) pos = str.length(); //checks length
+        string token = str.substr(prev, pos-prev);  //shortens string
+        if (!token.empty()) tokens.push_back(token); //if string not empty, push to back
         prev = pos + delim.length();
     }
     while (pos < str.length() && prev < str.length());
-    return tokens;
+    return tokens; //returns string vector split
 }
 
 /**
@@ -33,7 +33,7 @@ vector<string> Assembler::strsplit(const string& str, const string& delim)
  * @param memory checks if memory is greater than or equal to 32
  */ 
 Assembler::Assembler(int memory){
-	if(memory >= 32){
+	if(memory >= 32){ //check if enough memory exists or error
 		maxMemory = memory;
 	}
 	else{
@@ -46,7 +46,7 @@ Assembler::Assembler(int memory){
  * @brief deconstucts assembler object
  */ 
 Assembler::~Assembler(){
-
+    //deconstructor
 }
 
 /**
@@ -106,18 +106,18 @@ int Assembler::getOpcode(std::string mneumonic){
  * @returns if the function was successful
  */ 
 bool Assembler::assemble(std::string filename){
-    int instructionCounter = 0;
-    int lineCounter = 0;
-    string line;
+    int instructionCounter = 0; //counter for the current instruction
+    int lineCounter = 0; //counter for the current line
+    string line; //the current line
     ifstream reader(filename);
     
-	if (!reader) {
+	if (!reader) { //checks if it is read correctly
         throw invalid_argument("202");
     }
 
 	for (int i = 1; i <= 2; i++)
 	{
-		while (getline(reader, line))
+		while (getline(reader, line)) //while it is possible to get a line
 		{
 			try
 			{
@@ -171,26 +171,26 @@ bool Assembler::assemble(std::string filename){
  * @param iteration of which line it is on
  */
 void Assembler::processLine(std::string line, int &counter, int iteration){
-    if (counter >= maxMemory)
+    if (counter >= maxMemory) //checks if exceeding memory
     {
         throw invalid_argument("104");
     }
     string splitLine = line;
 
-    if(line.find(';') != std::string::npos){
+    if(line.find(';') != std::string::npos){ //removes ;
 		splitLine = line.substr(0,line.find(';'));
 	}
 
-    if (splitLine == ""){
+    if (splitLine == ""){ //checks if split is empty
         return;
     }
 
-	if(out.getLineDone(counter) == true){
+	if(out.getLineDone(counter) == true){ //checks if reached the end of the line
 		counter++;
 		return;
 	}
 
-    vector<string> instruction = strsplit(splitLine, " ");
+    vector<string> instruction = strsplit(splitLine, " "); //splits line at spaces
 
     if(instruction[0].find(':') != std::string::npos){
         string label = instruction[0].substr(0,instruction[0].find(':'));
@@ -203,6 +203,7 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
 
         string opcode = instruction[1];
 		
+        //if variable is read, set the 3rd part of the string to the operand
         if (opcode == "VAR")
         {
             string operand = instruction[2];
@@ -221,13 +222,14 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
 			return;
         }
         
+        //validates opcode
         int opcodedecimal = getOpcode(opcode);
         if (opcodedecimal == -1)
         {
             throw invalid_argument("102");
         }
         
-        string opcodeBinary =binary::decimalToUnsignedBinary(opcodedecimal, 7);
+        string opcodeBinary = binary::decimalToUnsignedBinary(opcodedecimal, 7);
 
 		// Handle no operand case
         if(instruction.size() < 3){
@@ -237,6 +239,7 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
 			return;
 		}
 
+        //sets operand to the 3rd part of the split string 
         string operand = instruction[2];
         int index = sym.searchLabel(operand);
         if (index == -1)
@@ -349,7 +352,8 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
  * @param filename the name of the file it is writing to
  */
 void Assembler::exportToFile(string filename){
-	try{
+	//saves to file or gives error
+    try{
 		out.saveToFile(filename);
 	}
 	catch(const exception &e){
@@ -391,7 +395,8 @@ void SymbolTable::addLabel(std::string label, std::string address){
  * @return int the index of the label in the vector, or -1 if not found
  */
 int SymbolTable::searchLabel(std::string label){
-	int i = 0;
+	//searches for the label or returns -1
+    int i = 0;
 	for (entry e : table) {
 		if (e.label == label) {
 			return i;
@@ -408,7 +413,7 @@ int SymbolTable::searchLabel(std::string label){
  * @return std::string The address
  */
 string SymbolTable::getAddress(int index){
-
+    //returns the address at the given index in the table
 	return table.at(index).address;
 }
 
@@ -417,14 +422,14 @@ string SymbolTable::getAddress(int index){
  * @brief Constucts a new output buffer
  */
 OutputBuffer::OutputBuffer(){
-
+    //empty constructor
 }
 
 /**
  * @brief Destructs output buffer object
  */ 
 OutputBuffer::~OutputBuffer(){
-
+    //empty deconstructor
 }
 
 /**
