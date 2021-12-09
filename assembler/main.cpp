@@ -67,7 +67,22 @@ void startAssembly(){
         printMessage("Setting memory size to 32 lines...");
     }
 
-    Assembler a(memory);
+    string verboseIn = getUserInput("Do you want to turn on verbose more? [y/N]");
+    bool verbose = false;
+    if(!verboseIn.empty()){
+        if(verboseIn.front() == 'y' || verboseIn.front() == 'Y'){
+            printMessage("Turning verbose mode on...");
+            verbose = true;
+        }
+        else {
+            printMessage("Turning verbose mode off...");
+        }
+    }
+    else{
+        printMessage("Turning verbose mode off...");
+    }
+
+    Assembler a(memory, verbose);
     if(a.loadInstructionSet(iSet) && a.assemble(ifile)){
         a.exportToFile(ofile);
     }

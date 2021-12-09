@@ -174,7 +174,12 @@ class Assembler{
          * @brief int maxMemory is the max amount of memory that can be used
          */
         int maxMemory = 32;
-
+        
+        /**
+         * @brief Whether to show verbose information
+         */
+        bool verbose;
+  
         /**
          * @brief SymbolTable object created named sym
          */
@@ -196,7 +201,7 @@ class Assembler{
          * 
          * @param memory checks if memory is greater than or equal to 32
          */ 
-        Assembler(int memory);
+        Assembler(int memory, bool verbose);
 
         /**
          * @brief deconstucts assembler object
