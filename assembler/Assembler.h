@@ -22,10 +22,14 @@ class SymbolTable{
     };
 
     private:
+        
         /**
          * @brief This entry vector reprsents the symbol table
          */
-        std::vector<entry> table;
+        std::vector<entry> table; //table of labels and addresses
+
+        std::vector<entry> table; 
+
 
     public:
         /**
