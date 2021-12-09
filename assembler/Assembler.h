@@ -10,15 +10,32 @@
 
 class SymbolTable{
     struct entry {
+        /**
+         * @brief string label holds the labels stored in the symbol table
+         */ 
         std::string label;
+
+        /**
+         * @brief string address holds the addresses stored in the symbol table
+         */ 
         std::string address;
     };
 
     private:
+        /**
+         * @brief This entry vector reprsents the symbol table
+         */
         std::vector<entry> table;
 
     public:
+        /**
+         * @brief Constucts a new symbol table object
+         */
         SymbolTable();
+
+        /**
+         * @brief Destructs symbol table object
+         */ 
         ~SymbolTable();
 
         /**
@@ -49,48 +66,163 @@ class SymbolTable{
 
 class OutputBuffer{
     struct entry {
+        /**
+         * @brief string output holds the output in the output buffer
+         */  
         std::string output;
+
+        /**
+         * @brief boolean done stores if the entry in the output buffer is complete
+         */  
         bool done;
     };
 
     private:
+        /**
+         * @brief This entry vector reprsents the output buffer
+         */  
         std::vector<entry> buffer;
 
     public:
+        /**
+         * @brief Constucts a new output buffer
+         */
         OutputBuffer();
+
+        /**
+         * @brief Destructs output buffer object
+         */ 
         ~OutputBuffer();
 
+        /**
+         * @brief get and return the buffer
+         * @return entry vector, which represents the output buffer
+         */
         std::vector<entry> getBuffer(){return buffer;};
+
+        /**
+         * @brief Checks if line with certain lineNumber has completed output
+         * 
+         * @param lineNumber, checks if the output of this line is complete
+         * @return boolean, true for done and false otherwise
+         */
         bool getLineDone(int lineNumber);
+
+        /**
+         * @brief Adds a new line to the outputBuffer
+         * 
+         * @param output the binary value
+         * @param done whether the line is complete
+         * @return std::string The address
+         */
         void addLine(std::string output, bool done);
+
+        /**
+         * @brief sets line that was not done after first cycle
+         * 
+         * @param output the binary value
+         * @param done whether the line is complete
+         * @param lineNumber the line which was not complete
+         */  
         void setLine(std::string output, bool done, int lineNumber);
+
+        /**
+         * @brief saves the output to a textfile
+         * 
+         * @param filename the name of the output file
+         */
         void saveToFile(std::string filename);
 };
 
 class Assembler{
     struct instruction{
+        /**
+         * @brief string mneumonic used to specify the opcode
+         */
         std::string mneumonic;
+
+        /**
+         * @brief int opcode holds the operation codes value
+         */
         int opcode;
     };
     private:
+        /**
+         * @brief int currentLine is which line the assembler is processing
+         */
         int currentLine = 0;
+
+        /**
+         * @brief int maxMemory is the max amount of memory that can be used
+         */
         int maxMemory = 32;
 
+        /**
+         * @brief SymbolTable object created named sym
+         */
         SymbolTable sym;
+
+        /**
+         * @brief outputBuffer object created named out
+         */
         OutputBuffer out;
 
+        /**
+         * @brief vector of instructions created named instructionSet
+         */
         std::vector<instruction> instructionSet;
 
     public:
+        /**
+         * @brief constucts a new assembler object
+         * 
+         * @param memory checks if memory is greater than or equal to 32
+         */ 
         Assembler(int memory);
+
+        /**
+         * @brief deconstucts assembler object
+         */ 
         ~Assembler();
 
+        /**
+         * @brief loads the instuction set
+         * 
+         * @param filename name of file which the instruction set is being loaded from
+         * @return if the file was read successfully
+         */
         bool loadInstructionSet(std::string filename);
+
+        /**
+         * @brief gets the operation code
+         * 
+         * @param mneumonic used to specify the operation code
+         * @return opcode or -1 if it is not found
+         */ 
         int getOpcode(std::string mneumonic);
 
+        /**
+         * @brief runs the assembler
+         * 
+         * @param filename the file which is to be read in
+         * @returns if the function was successful
+         */ 
         bool assemble(std::string filename);
+
+        /**
+         * @brief processes each line which is to be assembled
+         * 
+         * @param line that is being assembled
+         * @param counter of which instuction it is processing
+         * @param iteration of which line it is on
+         */
         void processLine(std::string line, int &counter, int iteration);
 
+        /**
+         * @brief calls save to file if possible
+         * 
+         * @param filename the name of the file it is writing to
+         */
         void exportToFile(std::string filename);
       
       
