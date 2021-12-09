@@ -28,11 +28,13 @@ vector<string> Assembler::strsplit(const string& str, const string& delim)
 }
 
 Assembler::Assembler(int memory, bool verbose){
+    this->verbose = verbose;
+
 	if(memory >= 32){
 		maxMemory = memory;
         if (verbose)
         {
-            cout << "memory size is"<< memory<<endl;
+            cout << FMAG("[Assembling...] ") << "Memory size set to " << memory <<endl;
         }
         
 	}
@@ -68,10 +70,11 @@ bool Assembler::loadInstructionSet(std::string filename){
         opcode = stoi(token[1]); //get opcode
         instruction.opcode = opcode; //convert opcode to int
         instructionSet.push_back(instruction); //add to set
-        if (verbose)
-        {
-            cout << "gets line: "<< line<<"from file"<<endl;
-        }
+        
+    }
+    if (verbose)
+    {
+        cout << FMAG("[Assembling...] ") << "Instruction set loaded from file " << filename << endl;
     }
     return true;
 }
@@ -81,13 +84,7 @@ int Assembler::getOpcode(std::string mneumonic){
     for (size_t i = 0; i < instructionSet.size(); i++) {
         //if matches return opcode
         if(instructionSet.at(i).mneumonic == mneumonic) {
-
-            if (verbose)
-            {
-                cout << "opcode is: "<< instructionSet.at(i).opcode<<endl;
-            }
             return instructionSet.at(i).opcode;
-            
         }
     }
     //if not found return -1
@@ -108,10 +105,14 @@ bool Assembler::assemble(std::string filename){
 	{
 		while (getline(reader, line))
 		{
+			if (verbose)
+            {
+                 cout << FMAG("[Assembling...] ") << "Processing line from " << filename << ": " << line << endl;
+            }
+
 			try
 			{
 				processLine(line, instructionCounter, i);
-				
 			}
 			catch(const std::invalid_argument& e)
 			{
@@ -141,11 +142,6 @@ bool Assembler::assemble(std::string filename){
 
 				return false;
 			}
-			if (verbose)
-            {
-                 cout << "gets line: "<< line<<"from file"<<endl;
-            }
-
 		}
 		reader.clear();
 		reader.seekg(0);
@@ -183,7 +179,11 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
 			if (sym.searchLabel(label) != -1){
 				throw invalid_argument("100");
 			}
-			sym.addLabel(label, binary::decimalToUnsignedBinary(counter, 12));
+            string address = binary::decimalToUnsignedBinary(counter, 12);
+			sym.addLabel(label, address);
+            if(verbose){
+                cout << FMAG("[Assembling...] ") << "Added label to symbol table: " << label << " : " << address << endl;
+            }
 		}
 
         string opcode = instruction[1];
@@ -201,7 +201,11 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
                 throw invalid_argument("101");
             }
             
-            out.addLine(binary::decimalToSignedBinary(op, 32), true);
+            string value = binary::decimalToSignedBinary(op, 32);
+            out.addLine(value, true);
+            if(verbose){
+                cout << FMAG("[Assembling...] ") << "Added line to output buffer and marked it as completed: " << value << endl;
+            }
            
 			counter++;
 			return;
@@ -214,14 +218,15 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         }
         
         string opcodeBinary =binary::decimalToUnsignedBinary(opcodedecimal, 7);
-        if (verbose)
-        {
-            cout << "binary opcode: "<<opcodeBinary <<endl;
-        }
 		// Handle no operand case
         if(instruction.size() < 3){
             string output = "0000000000000" + opcodeBinary + "000000000000";
 			out.addLine(output, true);
+
+            if(verbose){
+                cout << FMAG("[Assembling...] ") << "Added line to output buffer and marked it as completed: " << output << endl;
+            }
+
 			counter++;
 			return;
 		}
@@ -233,6 +238,11 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
             if (iteration == 1)
             {
                 out.addLine("", false);
+
+                if(verbose){
+                    cout << FMAG("[Assembling...] ") << "Added empty line to output buffer and marked it as incomplete. " << endl;
+                }
+
 				counter++;
 				return;
             }
@@ -244,20 +254,26 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         else{
             string address = sym.getAddress(index);
             string output = address + "0" + opcodeBinary + "000000000000";
-            if (verbose)
-            {
-                cout << "output is: "<<output <<endl;
-            }
+
             if (iteration == 1)
             {
-                
                 out.addLine(output, true);
+
+                if(verbose){
+                    cout << FMAG("[Assembling...] ") << "Added line to output buffer and marked it as completed: " << output << endl;
+                }
+
 				counter++;
 				return;
 
             }
             else{
                 out.setLine(output, true, counter);
+
+                if(verbose){
+                    cout << FMAG("[Assembling...] ") << "Completed empty line "<< counter << " of the output buffer: " << output << endl;
+                }
+
 				counter++;
 				return;
 
@@ -281,7 +297,13 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
                 throw invalid_argument("101");
             }
             
-            out.addLine(binary::decimalToSignedBinary(op, 32), true);
+            string value = binary::decimalToSignedBinary(op, 32);
+            out.addLine(value, true);
+
+            if(verbose){
+                cout << FMAG("[Assembling...] ") << "Added line to output buffer and marked it as completed: " << value << endl;
+            }
+
 			counter++;
 			return;
         }
@@ -293,14 +315,16 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         }
         
         string opcodeBinary =binary::decimalToUnsignedBinary(opcodedecimal, 7);
-         if (verbose)
-        {
-            cout << "binary opcode: "<<opcodeBinary <<endl;
-        }
+        
 		// Handle no operand case
         if(instruction.size() < 2){
             string output = "0000000000000" + opcodeBinary + "000000000000";
 			out.addLine(output, true);
+
+            if(verbose){
+                cout << FMAG("[Assembling...] ") << "Added line to output buffer and marked it as completed: " << output << endl;
+            }
+
 			counter++;
 			return;
 		}
@@ -312,6 +336,11 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
             if (iteration == 1)
             {
                 out.addLine("", false);
+
+                if(verbose){
+                    cout << FMAG("[Assembling...] ") << "Added empty line to output buffer and marked it as incomplete." << endl;
+                }
+
 				counter++;
 				return;
             }
@@ -323,18 +352,28 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
         else{
             string address = sym.getAddress(index);
             string output = address + "0" + opcodeBinary + "000000000000";
-             if (verbose)
-            {
-                cout << "output is: "<<output <<endl;
-            }
+            // if (verbose)
+            // {
+            //     cout << FMAG("[Assembling...] ") << "Encoded in machine code: " <<output << endl;
+            // }
             if (iteration == 1)
             {
                 out.addLine(output, true);
+
+                if(verbose){
+                    cout << FMAG("[Assembling...] ") << "Added line to output buffer and marked it as completed: " << output << endl;
+                }
+
 				counter++;
 				return;
             }
             else{
                 out.setLine(output, true, counter);
+
+                if(verbose){
+                    cout << FMAG("[Assembling...] ") << "Completed empty line "<< counter << " of the output buffer: " << output << endl;
+                }
+
 				counter++;
 				return;
             }
@@ -346,14 +385,16 @@ void Assembler::processLine(std::string line, int &counter, int iteration){
 void Assembler::exportToFile(string filename){
 	try{
 		out.saveToFile(filename);
-         if (verbose)
+        if (verbose)
         {
-            cout << "saving to file"<<endl;
+            cout << FMAG("[Assembling...] ") << "Writing output buffer to file " << filename << endl;
         }
 	}
 	catch(const exception &e){
 		cout << "203" << endl;
 	}
+
+     cout << endl << FMAG("[Assembling...] ") << "Assembly completed." << endl; 
 }
 
 
